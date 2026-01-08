@@ -1,0 +1,1 @@
+export default function DoctorHome() { return <h1>Doctor Dashboard (Appointments & Patients)</h1>; }

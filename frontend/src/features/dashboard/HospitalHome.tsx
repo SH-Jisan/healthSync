@@ -1,0 +1,1 @@
+export default function HospitalHome() { return <h1>Hospital Dashboard (Overview & Staff)</h1>; }

@@ -1,0 +1,93 @@
+/* src/components/layout/Sidebar.module.css */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background-color: var(--surface);
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* ফিক্সড পজিশন যাতে স্ক্রল না হয় */
+    left: 0;
+    top: 0;
+}
+
+.header {
+    /* Flutter: LinearGradient(colors: [AppColors.primary, AppColors.secondary]) */
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 3rem 1.5rem 1.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background: white;
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.userInfo h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.userInfo p {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.nav {
+    padding: 1rem;
+    flex: 1;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.navItem:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.active {
+    background-color: rgba(0, 121, 107, 0.1); /* Primary color low opacity */
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 1rem 0;
+}
+
+.footer {
+    padding: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.logout {
+    color: var(--error);
+}
+
+.logout:hover {
+    background-color: #FEF2F2; /* Light Red */
+}

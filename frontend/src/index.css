@@ -1,0 +1,38 @@
+/* src/index.css */
+:root {
+    /* HealthSync App Colors */
+    --primary: #00796B;
+    --primary-dark: #004D40;
+    --accent: #00BFA5;
+
+    --background: #F8FAFC;
+    --surface: #FFFFFF;
+    --text-primary: #1E293B;
+    --text-secondary: #64748B;
+    --error: #EF4444;
+
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+/* Dark Mode Colors */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #80CBC4;
+        --background: #252525;
+        --surface: #353535;
+        --text-primary: #FFFFFF;
+    }
+}
+
+body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+button {
+    font-family: inherit;
+}
