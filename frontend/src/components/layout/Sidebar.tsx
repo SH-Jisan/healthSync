@@ -13,7 +13,7 @@ import {
 } from 'phosphor-react';
 import styles from './Sidebar.module.css'; // আমরা নিচে CSS ফাইল বানাবো
 
-export default function Sidebar() {
+export default function Sidebar({ onClose } : {onClose?: () => void}) {
     const navigate = useNavigate();
     const location = useLocation();
     const [user, setUser] = useState<any>(null);
@@ -65,7 +65,10 @@ export default function Sidebar() {
                     <div
                         key={item.name}
                         className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''}`}
-                        onClick={() => navigate(item.path)}
+                        onClick={() =>{
+                            navigate(item.path);
+                            if (onClose) onClose();
+                        }}
                     >
                         {item.icon}
                         <span>{item.name}</span>
