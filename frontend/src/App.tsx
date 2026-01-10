@@ -20,6 +20,8 @@ import RequestBlood from './features/blood/RequestBlood';
 import BloodFeed from './features/blood/BloodFeed';
 import DonorRegistration from './features/blood/DonorRegistration';
 import DoctorList from './features/doctors/DoctorList';
+import SignupPage from "./features/auth/SignupPage.tsx";
+import DoctorPatientProfile from "./features/doctors/DoctorPatientProfile.tsx";
 
 function App() {
     // Fix: Used Session | null instead of any
@@ -47,6 +49,7 @@ function App() {
                 {/* Public Routes */}
                 <Route path="/" element={!session ? <LandingPage /> : <Navigate to="/dashboard" />} />
                 <Route path="/login" element={!session ? <LoginPage /> : <Navigate to="/dashboard" />} />
+                <Route path="/signup" element={!session? <SignupPage/> : <Navigate to="/dashboard" />} />
                 <Route path="/about" element={<AboutPage />} />
 
                 {/* Protected Routes (Dashboard Layout) */}
@@ -62,6 +65,7 @@ function App() {
 
                     {/* Doctor Routes */}
                     <Route path="/doctors" element={<DoctorList />} />
+                    <Route path="/dashboard/patient/:id" element={<DoctorPatientProfile />} />
                 </Route>
             </Routes>
         </BrowserRouter>

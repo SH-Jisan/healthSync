@@ -1,4 +1,5 @@
 // src/features/auth/LoginPage.tsx
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
@@ -69,6 +70,12 @@ export default function LoginPage() {
                 >
                     {loading ? 'Logging in...' : 'Login'}
                 </button>
+                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-secondary)' }}>
+                    Don't have an account?{' '}
+                    <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none' }}>
+                        Create New Account
+                    </Link>
+                </p>
             </form>
         </div>
     );

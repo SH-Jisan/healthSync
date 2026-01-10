@@ -1,26 +1,35 @@
-/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
 import TimelineTile from './TimelineTile';
 
-export default function TimelineView() {
+// Props যোগ করা হলো (অপশনাল)
+interface Props {
+    userId?: string;
+}
+
+export default function TimelineView({ userId }: Props) {
     const [events, setEvents] = useState<MedicalEvent[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchEvents();
-    }, []);
+    }, [userId]); // userId পাল্টালে আবার ফেচ হবে
 
     const fetchEvents = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        let targetId = userId;
 
-        //
+        // যদি userId না দেওয়া থাকে, তবে নিজের আইডি নাও
+        if (!targetId) {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            targetId = user.id;
+        }
+
         const { data, error } = await supabase
             .from('medical_events')
             .select('*')
-            .eq('patient_id', user.id)
+            .eq('patient_id', targetId)
             .order('event_date', { ascending: false });
 
         if (error) {
@@ -37,14 +46,14 @@ export default function TimelineView() {
         return (
             <div style={{ textAlign: 'center', marginTop: '3rem', color: 'var(--text-secondary)' }}>
                 <h3>No Medical Records Found</h3>
-                <p>Upload your first report to start tracking.</p>
+                <p>{userId ? "Patient has no history yet." : "Upload your first report to start tracking."}</p>
             </div>
         );
     }
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--primary)' }}>My Medical History</h2>
+            <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Medical History</h3>
 
             {events.map((event, index) => (
                 <TimelineTile

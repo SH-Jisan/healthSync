@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabaseClient';
 import CitizenHome from './CitizenHome';
 import DoctorHome from './DoctorHome';
 import HospitalHome from './HospitalHome';
+import DiagnosticHome from "../diagnostic/DiagnosticHome.tsx";
 
 export default function DashboardPage() {
     const [role, setRole] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export default function DashboardPage() {
         case 'HOSPITAL':
             return <HospitalHome />;
         case 'DIAGNOSTIC':
-            return <h1>Diagnostic Dashboard (Coming Soon)</h1>;
+            return <DiagnosticHome />;
         case 'CITIZEN':
         default:
             return <CitizenHome />;
