@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabaseClient';
-import TimelineView from '../timeline/TimelineView';
+import { supabase } from '../../../lib/supabaseClient.ts';
+import TimelineView from '../../timeline/TimelineView.tsx';
 import { ArrowLeft, Plus, CheckCircle } from 'phosphor-react';
 
 interface PatientProfile {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../../lib/supabaseClient.ts';
 import { X, CalendarCheck } from 'phosphor-react';
-import type { Doctor } from '../../types';
+import type { Doctor } from '../../../types';
 
 interface Props {
     doctor: Doctor;

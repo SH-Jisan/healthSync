@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../../lib/supabaseClient';
-// Fix 1 & 3: Added 'type' keyword
 import type { Appointment } from '../../../types';
 import { CheckCircle, XCircle, Clock, User, Calendar } from 'phosphor-react';
 import { format } from 'date-fns';
 
-// Fix 4: Defined a proper type extending Appointment to include patient profile
 interface AppointmentWithPatient extends Appointment {
     profiles?: {
         full_name: string;
@@ -15,16 +14,14 @@ interface AppointmentWithPatient extends Appointment {
 }
 
 export default function DoctorAppointments() {
-    // Fix 2 & 4: Replaced 'any[]' with 'AppointmentWithPatient[]'
+    const navigate = useNavigate();
     const [appointments, setAppointments] = useState<AppointmentWithPatient[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Fix 5: Moved fetchAppointments ABOVE useEffect to fix 'access before declaration' error
     const fetchAppointments = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // ডাক্তারের অ্যাপয়েন্টমেন্টগুলো নিয়ে আসা, সাথে পেশেন্টের নাম ও ফোন
         const { data, error } = await supabase
             .from('appointments')
             .select('*, profiles:patient_id(full_name, phone, blood_group)')
@@ -32,7 +29,6 @@ export default function DoctorAppointments() {
             .order('appointment_date', { ascending: true });
 
         if (!error && data) {
-            // Supabase returns data as any, so we cast it safely
             setAppointments(data as unknown as AppointmentWithPatient[]);
         }
         setLoading(false);
@@ -52,7 +48,6 @@ export default function DoctorAppointments() {
         if (error) {
             alert('Error updating status');
         } else {
-            // লোকাল স্টেট আপডেট (রিফ্রেশ ছাড়া)
             setAppointments(prev => prev.map(app =>
                 app.id === id ? { ...app, status } : app
             ));
@@ -77,7 +72,6 @@ export default function DoctorAppointments() {
                             border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
                             display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'
                         }}>
-                            {/* Patient Info */}
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                 <div style={{
                                     width: '50px', height: '50px', borderRadius: '50%', background: '#E0F2F1',
@@ -98,10 +92,26 @@ export default function DoctorAppointments() {
                     </span>
                                     </div>
                                     {app.reason && <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#64748B' }}>Reason: "{app.reason}"</p>}
+
+                                    <button
+                                        onClick={() => navigate(`/dashboard/patient/${app.patient_id}`)}
+                                        style={{
+                                            marginTop: '8px',
+                                            background: 'none',
+                                            border: '1px solid var(--primary)',
+                                            color: 'var(--primary)',
+                                            padding: '4px 10px',
+                                            borderRadius: '20px',
+                                            fontSize: '0.85rem',
+                                            cursor: 'pointer',
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        View Profile & History
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Status & Actions */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                 {app.status === 'PENDING' && (
                                     <>

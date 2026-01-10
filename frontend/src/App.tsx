@@ -19,9 +19,9 @@ import BloodHome from './features/blood/BloodHome';
 import RequestBlood from './features/blood/RequestBlood';
 import BloodFeed from './features/blood/BloodFeed';
 import DonorRegistration from './features/blood/DonorRegistration';
-import DoctorList from './features/doctors/DoctorList';
+import DoctorList from './features/dashboard/doctor/DoctorList.tsx';
 import SignupPage from "./features/auth/SignupPage.tsx";
-import DoctorPatientProfile from "./features/doctors/DoctorPatientProfile.tsx";
+import DoctorPatientProfile from "./features/dashboard/doctor/DoctorPatientProfile.tsx";
 
 function App() {
     // Fix: Used Session | null instead of any

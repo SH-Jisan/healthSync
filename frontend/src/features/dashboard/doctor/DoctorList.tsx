@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../../lib/supabaseClient.ts';
 // Fix 1: Added 'type' keyword
-import type { Doctor } from '../../types';
+import type { Doctor } from '../../../types';
 // Fix 2: Replaced 'Stethoscope' with 'FirstAid'
 import { FirstAid, MagnifyingGlass, User } from 'phosphor-react';
-import BookAppointmentModal from './BookAppointmentModal';
+import BookAppointmentModal from './BookAppointmentModal.tsx';
 
 export default function DoctorList() {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
