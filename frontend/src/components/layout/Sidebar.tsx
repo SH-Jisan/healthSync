@@ -1,7 +1,7 @@
 // src/components/layout/Sidebar.tsx
 /* eslint-disable */
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import {useNavigate, useLocation, NavLink} from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import {
     SquaresFour,      // Dashboard Icon
@@ -12,6 +12,7 @@ import {
     SignOut,     // Logout Icon
     User,       // User Icon
     FirstAid,  // Doctor Icon
+    Bell,     // Bell Icon
 } from 'phosphor-react';
 import styles from './Sidebar.module.css'; // আমরা নিচে CSS ফাইল বানাবো
 
@@ -99,6 +100,20 @@ export default function Sidebar({ onClose } : {onClose?: () => void}) {
                 ))}
 
                 <div className={styles.divider} />
+
+                <div className={styles.navGroup}>
+                    <p className={styles.navLabel}>UPDATES</p> {/* Optional Label */}
+
+                    <NavLink
+                        to="/notifications"
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
+                        onClick={onClose} // For mobile close
+                    >
+                        <Bell size={22} weight="bold" />
+                        <span>Notifications</span>
+                        {/* Optional: Add a red dot if unread */}
+                    </NavLink>
+                </div>
 
                 {/* Dark Mode Switch */}
                 <div className={styles.navItem} onClick={toggleTheme}>

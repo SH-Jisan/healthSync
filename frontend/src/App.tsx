@@ -25,6 +25,7 @@ import DoctorPatientProfile from "./features/dashboard/doctor/DoctorPatientProfi
 import DonorSearch from "./features/blood/DonorSearch.tsx";
 import MyBloodRequests from "./features/blood/MyBloodRequests.tsx";
 import PatientAppointments from "./features/appointments/PatientAppointments.tsx";
+import NotificationsPage from "./features/notifications/NotificationsPage.tsx";
 
 function App() {
     // Fix: Used Session | null instead of any
@@ -61,6 +62,7 @@ function App() {
                     <Route path="/dashboard/patient/:id" element={<DoctorPatientProfile />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/appointments" element={<PatientAppointments/>} />
+                    <Route path="/notifications" element={<NotificationsPage/>} />
 
                     {/* Blood Bank Routes */}
                     <Route path="/blood" element={<BloodHome />} />
