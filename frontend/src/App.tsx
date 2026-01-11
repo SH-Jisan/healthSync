@@ -22,6 +22,8 @@ import DonorRegistration from './features/blood/DonorRegistration';
 import DoctorList from './features/dashboard/doctor/DoctorList.tsx';
 import SignupPage from "./features/auth/SignupPage.tsx";
 import DoctorPatientProfile from "./features/dashboard/doctor/DoctorPatientProfile.tsx";
+import DonorSearch from "./features/blood/DonorSearch.tsx";
+import MyBloodRequests from "./features/blood/MyBloodRequests.tsx";
 
 function App() {
     // Fix: Used Session | null instead of any
@@ -55,6 +57,7 @@ function App() {
                 {/* Protected Routes (Dashboard Layout) */}
                 <Route element={session ? <DashboardLayout /> : <Navigate to="/login" />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/dashboard/patient/:id" element={<DoctorPatientProfile />} />
                     <Route path="/profile" element={<ProfilePage />} />
 
                     {/* Blood Bank Routes */}
@@ -62,10 +65,12 @@ function App() {
                     <Route path="/blood/request" element={<RequestBlood />} />
                     <Route path="/blood/feed" element={<BloodFeed />} />
                     <Route path="/blood/register" element={<DonorRegistration />} />
+                    <Route path="/blood/search" element={<DonorSearch/>} />
+                    <Route path="/blood/my-requests" element={<MyBloodRequests/>}/>
+
 
                     {/* Doctor Routes */}
                     <Route path="/doctors" element={<DoctorList />} />
-                    <Route path="/dashboard/patient/:id" element={<DoctorPatientProfile />} />
                 </Route>
             </Routes>
         </BrowserRouter>

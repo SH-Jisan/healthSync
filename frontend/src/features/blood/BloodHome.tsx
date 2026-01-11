@@ -1,5 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Drop, MagnifyingGlass, Megaphone, UserPlus } from 'phosphor-react';
+import {
+    Drop,
+    MagnifyingGlass,
+    Megaphone,
+    UserPlus,
+    ListBullets,
+} from 'phosphor-react';
 import styles from './BloodHome.module.css';
 
 export default function BloodHome() {
@@ -19,6 +25,13 @@ export default function BloodHome() {
             icon: <Drop color="#F97316" weight="fill" />,
             bg: '#FFF7ED',
             path: '/blood/feed'
+        },
+        {
+            title: 'My Requests', // <--- Added this
+            desc: 'Manage requests you posted.',
+            icon: <ListBullets color="#8B5CF6" weight="bold" />,
+            bg: '#F3E8FF',
+            path: '/blood/my-requests'
         },
         {
             title: 'Become a Donor',
