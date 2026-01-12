@@ -1,0 +1,100 @@
+html , body{
+    overflow-x: hidden;
+}
+.gradient_box {
+    width: 100vw;
+    height: 140vh;
+    color: whitesmoke;
+    margin-top: 110px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+}
+.gradient_box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url("D:/Stock x/StockX-1/Practice/src/pages/Landing/image/cylinder_truck.jpeg"); /* Change this */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    filter: brightness(50%) blur(2px);
+    z-index: -1;
+}
+.content_container {
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hero {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.stockx{
+    font-weight: bold;
+    font-size: 50px;
+}
+.hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.ctaButtons button {
+    padding: 12px 24px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primaryBtn {
+    background-color: #ff914d;
+    color: white;
+}
+
+.primaryBtn:hover {
+    background-color: #e96f1f;
+}
+
+.secondaryBtn {
+    background-color: #ffffff;
+    border: 2px solid #ff914d;
+    color: #ff914d;
+}
+
+.secondaryBtn:hover {
+    background-color: #ff914d;
+    color: white;
+}
+
+.empty_container{
+    height: 200px;
+    width: 100%;
+    background-color: red;
+}

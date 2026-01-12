@@ -1,0 +1,185 @@
+
+.main_container{
+    height: 300px;
+    width: 100vw;
+    background-color: whitesmoke;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    text-align: center;
+}
+
+.h2{
+    font-weight: bold;
+    font-size: 2.5rem;
+    margin-left: 30px;
+    margin-right:0;
+}
+
+.brandLogo_container{
+    width: 80%;
+    min-width: 350px;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+
+
+
+
+.navButton {
+    height: 100%;
+    width: 150px;
+    background-color: rgba(255 , 255 , 255 , 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    margin: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.navButton:hover {
+    background-color: #f0f0f0;
+    backdrop-filter: blur(0);
+}
+.img_container{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    width: 540px;
+}
+
+.images{
+    height: 90%;
+    width: 90%;
+
+    object-fit: contain;
+    display: block;
+
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.box{
+    height: 100px;
+    width: 180px;
+
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: rgba(255 , 255 , 255 , 1);
+    backdrop-filter: blur(20px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition:  0.3s ease;
+}
+
+.box:hover{
+    background-color: rgba(255 , 255 , 255 , 2);
+    cursor: pointer;
+    scale: 1.01;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.viewWindow{
+    width: 540px;
+    overflow: hidden;
+    position: relative;
+}
+
+.secondRow{
+    grid-row: 2;
+}
+
+.gridWrapper {
+    width: 560px; /* 3 columns * 160px + gap */
+    height: 260px; /* enough for 2 rows */
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+
+}
+
+.innerTrack {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns × 2 rows = 10 boxes */
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    position: relative;
+}
+
+@media screen and (max-width: 768px) {
+    .main_container{
+        flex-direction: column;
+        height: 380px;
+    }
+
+    .gridWrapper,
+    .viewWindow {
+        width: 360px; /* 2 columns */
+        height: 240px;
+    }
+
+    .innerTrack {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+
+
+    .navButton {
+        width: 60px;
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .gridWrapper,
+    .viewWindow {
+        width: 240px; /* 1 column */
+        height: 220px;
+    }
+
+    .box {
+        width: 100px;
+        height: 90px;
+        font-size: 1rem;
+    }
+
+    .navButton {
+        width: 50px;
+        font-size: 1.2rem;
+    }
+
+    .h2 {
+        font-size: 1.5rem;
+    }
+
+    .brandLogo_container {
+        flex-direction: column;
+    }
+}
