@@ -3,39 +3,38 @@ import { useTranslation } from 'react-i18next';
 import HospitalOverview from './hospital/HospitalOverview';
 import HospitalDoctors from './hospital/HospitalDoctors';
 import HospitalPatients from './hospital/HospitalPatients';
-import HospitalBloodBank from "./hospital/HospitalBloodBank.tsx"; // <--- Import
+import HospitalBloodBank from "./hospital/HospitalBloodBank.tsx";
+import styles from './HospitalHome.module.css';
 
 export default function HospitalHome() {
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'blood'>('overview'); // <--- Updated State Type
+    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'blood'>('overview');
 
     return (
         <div>
             {/* Tab Navigation */}
-            <div style={{
-                display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border)', marginBottom: '2rem'
-            }}>
+            <div className={styles.tabsContainer}>
                 <button
                     onClick={() => setActiveTab('overview')}
-                    style={getTabStyle(activeTab === 'overview')}
+                    className={`${styles.tabButton} ${activeTab === 'overview' ? styles.active : ''}`}
                 >
                     {t('dashboard.hospital.tabs.overview')}
                 </button>
                 <button
                     onClick={() => setActiveTab('doctors')}
-                    style={getTabStyle(activeTab === 'doctors')}
+                    className={`${styles.tabButton} ${activeTab === 'doctors' ? styles.active : ''}`}
                 >
                     {t('dashboard.hospital.tabs.doctors')}
                 </button>
                 <button
                     onClick={() => setActiveTab('patients')}
-                    style={getTabStyle(activeTab === 'patients')}
+                    className={`${styles.tabButton} ${activeTab === 'patients' ? styles.active : ''}`}
                 >
                     {t('dashboard.hospital.tabs.patients')}
                 </button>
                 <button
                     onClick={() => setActiveTab('blood')}
-                    style={getTabStyle(activeTab === 'blood')}
+                    className={`${styles.tabButton} ${activeTab === 'blood' ? styles.active : ''}`}
                 >
                     {t('dashboard.hospital.tabs.blood')}
                 </button>
@@ -48,15 +47,4 @@ export default function HospitalHome() {
             {activeTab === 'blood' && <HospitalBloodBank />}
         </div>
     );
-}
-
-// Helper for clean styles
-function getTabStyle(isActive: boolean) {
-    return {
-        padding: '1rem 0', background: 'none', border: 'none', cursor: 'pointer',
-        fontSize: '1rem', fontWeight: 600,
-        color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
-        borderBottom: isActive ? '3px solid var(--primary)' : '3px solid transparent',
-        transition: 'all 0.2s'
-    };
 }

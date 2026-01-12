@@ -1,0 +1,103 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.searchSection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.searchInput {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.searchBtn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.uploadForm {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+}
+
+.patientInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.patientAvatar {
+    padding: 10px;
+    background: #E0F2F1;
+    border-radius: 50%;
+    color: var(--primary);
+}
+
+.patientName {
+    margin: 0;
+}
+
+.patientContact {
+    color: var(--text-secondary);
+}
+
+.formGroup {
+    margin-bottom: 1rem;
+}
+
+.fileGroup {
+    margin-bottom: 2rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.titleInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.fileInput {
+    width: 100%;
+}
+
+.uploadBtn {
+    width: 100%;
+    padding: 14px;
+    background: #166534;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}

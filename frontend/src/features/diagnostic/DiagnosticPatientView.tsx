@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { ArrowLeft, CheckCircle, Upload, Plus } from 'phosphor-react';
 import UploadModal from '../upload/UploadModal';
+import styles from './DiagnosticPatientView.module.css';
 
 interface Patient {
     id: string;
@@ -106,44 +107,40 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
 
     return (
         <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            <div className={styles.header}>
+                <button onClick={onBack} className={styles.backBtn}>
                     <ArrowLeft size={24} />
                 </button>
-                <h2 style={{ margin: 0 }}>{patient.full_name}</h2>
-                <span style={{ background: '#eee', padding: '4px 10px', borderRadius: '12px', fontSize: '0.9rem' }}>{patient.phone || patient.email}</span>
+                <h2 className={styles.patientName}>{patient.full_name}</h2>
+                <span className={styles.patientContact}>{patient.phone || patient.email}</span>
             </div>
 
             <button
                 onClick={() => setShowNewOrder(true)}
-                style={{
-                    marginBottom: '2rem', padding: '12px 24px', background: 'var(--primary)', color: 'white',
-                    border: 'none', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold'
-                }}
+                className={styles.newOrderBtn}
             >
                 <Plus size={20} /> {t('dashboard.diagnostic.view.new_order_btn')}
             </button>
 
             {/* Orders List */}
-            <div style={{ display: 'grid', gap: '1rem' }}>
+            <div className={styles.ordersGrid}>
                 {orders.map(order => (
-                    <div key={order.id} style={{
-                        background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-                        borderLeft: order.report_status === 'PENDING' ? '5px solid orange' : '5px solid green',
-                        boxShadow: 'var(--shadow-sm)'
+                    <div key={order.id} className={styles.orderCard} style={{
+                        borderLeft: order.report_status === 'PENDING' ? '5px solid orange' : '5px solid green'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                        <div className={styles.orderHeader}>
                             <div>
-                                <h4 style={{ margin: '0 0 5px 0' }}>{order.test_names.join(', ')}</h4>
-                                <small style={{ color: 'var(--text-secondary)' }}>{new Date(order.created_at).toLocaleString()}</small>
+                                <h4 className={styles.testNames}>{order.test_names.join(', ')}</h4>
+                                <small className={styles.orderDate}>{new Date(order.created_at).toLocaleString()}</small>
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>৳{order.total_amount}</div>
+                                <div className={styles.amount}>৳{order.total_amount}</div>
                                 <div
                                     onClick={() => togglePayment(order)}
+                                    className={styles.paymentStatus}
                                     style={{
-                                        cursor: 'pointer', color: order.status === 'PAID' ? 'green' : 'red', fontWeight: 'bold',
-                                        border: '1px solid', padding: '2px 8px', borderRadius: '4px', display: 'inline-block', marginTop: '4px'
+                                        color: order.status === 'PAID' ? 'green' : 'red',
+                                        borderColor: 'currentColor'
                                     }}
                                 >
                                     {order.status}
@@ -151,19 +148,16 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                        <div className={styles.orderActions}>
                             {order.report_status === 'PENDING' ? (
                                 <button
                                     onClick={() => setUploadOrderId(order.id)}
-                                    style={{
-                                        background: '#3B82F6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px',
-                                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
-                                    }}
+                                    className={styles.uploadBtn}
                                 >
                                     <Upload size={18} /> {t('dashboard.diagnostic.view.upload_report')}
                                 </button>
                             ) : (
-                                <span style={{ color: 'green', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
+                                <span className={styles.completedStatus}>
                                     <CheckCircle size={20} /> {t('dashboard.diagnostic.view.completed')}
                                 </span>
                             )}
@@ -174,13 +168,13 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
 
             {/* New Order Modal */}
             {showNewOrder && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '500px', maxHeight: '80vh', overflowY: 'auto' }}>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
                         <h3>{t('dashboard.diagnostic.view.select_tests_title')}</h3>
-                        <div style={{ maxHeight: '200px', overflowY: 'auto', marginBottom: '1rem', border: '1px solid #eee', padding: '10px' }}>
+                        <div className={styles.testList}>
                             {availableTests.map(test => (
-                                <div key={test.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', borderBottom: '1px solid #f0f0f0' }}>
-                                    <label style={{ display: 'flex', gap: '10px', alignItems: 'center', flex: 1 }}>
+                                <div key={test.id} className={styles.testItem}>
+                                    <label className={styles.testLabel}>
                                         <input
                                             type="checkbox"
                                             onChange={(e) => {
@@ -200,14 +194,14 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginBottom: '1rem', fontSize: '1.2rem' }}>
+                        <div className={styles.totalAmount}>
                             <span>{t('dashboard.diagnostic.view.total')}</span>
                             <span>৳{totalAmount}</span>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowNewOrder(false)} style={{ flex: 1, padding: '12px', border: '1px solid #ccc', borderRadius: '8px', background: 'white', cursor: 'pointer' }}>{t('common.cancel')}</button>
-                            <button onClick={handleCreateOrder} style={{ flex: 1, padding: '12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.diagnostic.view.create_order_btn')}</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setShowNewOrder(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
+                            <button onClick={handleCreateOrder} className={styles.createBtn}>{t('dashboard.diagnostic.view.create_order_btn')}</button>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
 import { User, Plus, Trash } from 'phosphor-react';
+import styles from './HospitalDoctors.module.css';
 
 interface DoctorRow {
     id: string; // The relationship ID
@@ -72,47 +73,35 @@ export default function HospitalDoctors() {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('dashboard.hospital.doctors.title')}</h2>
+            <div className={styles.header}>
+                <h2 className={styles.title}>{t('dashboard.hospital.doctors.title')}</h2>
                 <button
                     onClick={() => setShowModal(true)}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--primary)',
-                        color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
-                    }}
+                    className={styles.addBtn}
                 >
                     <Plus size={20} /> {t('dashboard.hospital.doctors.add_new')}
                 </button>
             </div>
 
             {doctors.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
+                <div className={styles.noDoctors}>
                     {t('dashboard.hospital.doctors.no_doctors')}
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                <div className={styles.grid}>
                     {doctors.map(d => (
-                        <div key={d.id} style={{
-                            background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-                            border: '1px solid var(--border)', position: 'relative', display: 'flex', alignItems: 'center', gap: '1rem'
-                        }}>
-                            <div style={{
-                                width: '50px', height: '50px', borderRadius: '50%', background: '#EFF6FF',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563EB'
-                            }}>
+                        <div key={d.id} className={styles.card}>
+                            <div className={styles.avatar}>
                                 <User size={24} />
                             </div>
                             <div>
-                                <h3 style={{ margin: 0 }}>{d.profiles?.full_name}</h3>
-                                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{d.profiles?.specialty}</p>
+                                <h3 className={styles.doctorName}>{d.profiles?.full_name}</h3>
+                                <p className={styles.specialty}>{d.profiles?.specialty}</p>
                             </div>
 
                             <button
                                 onClick={() => removeDoctor(d.id)}
-                                style={{
-                                    position: 'absolute', top: '15px', right: '15px', background: '#FEE2E2',
-                                    color: '#DC2626', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer'
-                                }}
+                                className={styles.removeBtn}
                             >
                                 <Trash size={16} />
                             </button>
@@ -122,17 +111,17 @@ export default function HospitalDoctors() {
             )}
 
             {showModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
                         <h3>{t('dashboard.hospital.doctors.add_modal_title')}</h3>
                         <input
                             placeholder={t('dashboard.hospital.doctors.email_placeholder')}
                             value={searchEmail} onChange={e => setSearchEmail(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            className={styles.input}
                         />
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
-                            <button onClick={addDoctor} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.hospital.doctors.add_new')}</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setShowModal(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
+                            <button onClick={addDoctor} className={styles.saveBtn}>{t('dashboard.hospital.doctors.add_new')}</button>
                         </div>
                     </div>
                 </div>

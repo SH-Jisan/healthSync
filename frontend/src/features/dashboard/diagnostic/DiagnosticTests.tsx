@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabaseClient';
 import { Plus, Trash, CurrencyDollar, Flask } from 'phosphor-react';
 import { useTranslation } from 'react-i18next';
+import styles from './DiagnosticTests.module.css';
 
 interface Test {
     id: string;
@@ -60,47 +61,41 @@ export default function DiagnosticTests() {
     if (loading) return <div>{t('common.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Manage Services / Tests</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>Manage Services / Tests</h2>
 
             {/* Add Form */}
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <div className={styles.addForm}>
                 <input
                     placeholder="Test Name (e.g. CBC, MRI)"
                     value={newName} onChange={e => setNewName(e.target.value)}
-                    style={{ flex: 2, padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
+                    className={styles.inputName}
                 />
                 <input
                     type="number"
                     placeholder="Price (BDT)"
                     value={newPrice} onChange={e => setNewPrice(e.target.value)}
-                    style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
+                    className={styles.inputPrice}
                 />
                 <button
                     onClick={addTest}
-                    style={{
-                        background: 'var(--primary)', color: 'white', border: 'none', padding: '12px 24px',
-                        borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px'
-                    }}
+                    className={styles.addBtn}
                 >
                     <Plus size={20} /> Add
                 </button>
             </div>
 
             {/* List */}
-            <div style={{ display: 'grid', gap: '1rem' }}>
+            <div className={styles.list}>
                 {tests.map(test => (
-                    <div key={test.id} style={{
-                        background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-                        border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                            <div style={{ padding: '10px', background: '#E0F2F1', borderRadius: '8px', color: 'var(--primary)' }}>
+                    <div key={test.id} className={styles.listItem}>
+                        <div className={styles.itemInfo}>
+                            <div className={styles.icon}>
                                 <Flask size={24} />
                             </div>
-                            <div>
-                                <h3 style={{ margin: 0 }}>{test.name}</h3>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--text-secondary)', marginTop: '5px' }}>
+                            <div className={styles.itemDetails}>
+                                <h3>{test.name}</h3>
+                                <div className={styles.itemPrice}>
                                     <CurrencyDollar size={18} /> {test.price} BDT
                                 </div>
                             </div>
@@ -108,7 +103,7 @@ export default function DiagnosticTests() {
 
                         <button
                             onClick={() => deleteTest(test.id)}
-                            style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}
+                            className={styles.deleteBtn}
                         >
                             <Trash size={20} />
                         </button>

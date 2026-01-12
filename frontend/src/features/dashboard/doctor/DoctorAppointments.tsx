@@ -5,6 +5,7 @@ import { supabase } from '../../../lib/supabaseClient';
 import type { Appointment } from '../../../types';
 import { CheckCircle, XCircle, Clock, User, Calendar } from 'phosphor-react';
 import { format } from 'date-fns';
+import styles from './DoctorAppointments.module.css';
 
 interface AppointmentWithPatient extends Appointment {
     profiles?: {
@@ -59,79 +60,56 @@ export default function DoctorAppointments() {
     if (loading) return <div>{t('dashboard.doctor.appointments.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>{t('dashboard.doctor.appointments.title')}</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>{t('dashboard.doctor.appointments.title')}</h2>
 
             {appointments.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
+                <div className={styles.noAppointments}>
                     <h3>{t('dashboard.doctor.appointments.no_appointments')}</h3>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gap: '1rem' }}>
+                <div className={styles.listGrid}>
                     {appointments.map((app) => (
-                        <div key={app.id} style={{
-                            background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-                            border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
-                            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'
-                        }}>
-                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                <div style={{
-                                    width: '50px', height: '50px', borderRadius: '50%', background: '#E0F2F1',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)'
-                                }}>
+                        <div key={app.id} className={styles.card}>
+                            <div className={styles.patientInfo}>
+                                <div className={styles.avatar}>
                                     <User size={24} />
                                 </div>
                                 <div>
-                                    <h3 style={{ margin: '0 0 5px 0' }}>{app.profiles?.full_name || t('dashboard.doctor.appointments.unknown_patient')}</h3>
-                                    <div style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <h3 className={styles.patientName}>{app.profiles?.full_name || t('dashboard.doctor.appointments.unknown_patient')}</h3>
+                                    <div className={styles.dateTime}>
+                                        <span className={styles.iconText}>
                                             <Calendar size={16} />
                                             {format(new Date(app.appointment_date), 'dd MMM yyyy')}
                                         </span>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                        <span className={styles.iconText}>
                                             <Clock size={16} />
                                             {format(new Date(app.appointment_date), 'hh:mm a')}
                                         </span>
                                     </div>
-                                    {app.reason && <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#64748B' }}>{t('dashboard.doctor.appointments.reason')} "{app.reason}"</p>}
+                                    {app.reason && <p className={styles.reason}>{t('dashboard.doctor.appointments.reason')} "{app.reason}"</p>}
 
                                     <button
                                         onClick={() => navigate(`/dashboard/patient/${app.patient_id}`)}
-                                        style={{
-                                            marginTop: '8px',
-                                            background: 'none',
-                                            border: '1px solid var(--primary)',
-                                            color: 'var(--primary)',
-                                            padding: '4px 10px',
-                                            borderRadius: '20px',
-                                            fontSize: '0.85rem',
-                                            cursor: 'pointer',
-                                            fontWeight: 600
-                                        }}
+                                        className={styles.viewProfileBtn}
                                     >
                                         {t('dashboard.doctor.appointments.view_profile')}
                                     </button>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div className={styles.actions}>
                                 {app.status === 'PENDING' && (
                                     <>
                                         <button
                                             onClick={() => updateStatus(app.id, 'CONFIRMED')}
-                                            style={{
-                                                background: '#DCFCE7', color: '#166534', border: 'none', padding: '8px 16px', borderRadius: '8px',
-                                                cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px'
-                                            }}
+                                            className={styles.acceptBtn}
                                         >
                                             <CheckCircle size={18} /> {t('dashboard.doctor.appointments.accept')}
                                         </button>
                                         <button
                                             onClick={() => updateStatus(app.id, 'CANCELLED')}
-                                            style={{
-                                                background: '#FEE2E2', color: '#991B1B', border: 'none', padding: '8px 16px', borderRadius: '8px',
-                                                cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px'
-                                            }}
+                                            className={styles.declineBtn}
                                         >
                                             <XCircle size={18} /> {t('dashboard.doctor.appointments.decline')}
                                         </button>
@@ -139,13 +117,13 @@ export default function DoctorAppointments() {
                                 )}
 
                                 {app.status === 'CONFIRMED' && (
-                                    <span style={{ color: '#16A34A', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <span className={styles.statusConfirmed}>
                                         <CheckCircle size={20} weight="fill" /> {t('dashboard.doctor.appointments.confirmed')}
                                     </span>
                                 )}
 
                                 {app.status === 'CANCELLED' && (
-                                    <span style={{ color: '#DC2626', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <span className={styles.statusCancelled}>
                                         <XCircle size={20} weight="fill" /> {t('dashboard.doctor.appointments.cancelled')}
                                     </span>
                                 )}

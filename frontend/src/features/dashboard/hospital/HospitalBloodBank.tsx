@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient';
 import { Drop, Plus } from 'phosphor-react';
+import styles from './HospitalBloodBank.module.css';
 
 interface BloodInventory {
     id: string;
@@ -78,71 +79,61 @@ export default function HospitalBloodBank() {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('dashboard.hospital.blood.title')}</h2>
+            <div className={styles.header}>
+                <h2 className={styles.title}>{t('dashboard.hospital.blood.title')}</h2>
                 <button
                     onClick={() => setShowModal(true)}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--primary)',
-                        color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
-                    }}
+                    className={styles.addBtn}
                 >
                     <Plus size={20} /> {t('dashboard.hospital.blood.update_inventory')}
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+            <div className={styles.grid}>
                 {BLOOD_GROUPS.map(group => {
                     const item = inventory.find(i => i.blood_group === group);
                     return (
-                        <div key={group} style={{
-                            background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px',
-                            border: '1px solid var(--border)', textAlign: 'center',
-                            opacity: item ? 1 : 0.6
-                        }}>
-                            <div style={{
-                                width: '60px', height: '60px', margin: '0 auto 10px', borderRadius: '50%',
-                                background: '#FEE2E2', color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold'
-                            }}>
+                        <div key={group} className={`${styles.card} ${!item ? styles.inactive : ''}`}>
+                            <div className={styles.iconWrapper}>
                                 <Drop size={32} weight="fill" />
                             </div>
-                            <h3 style={{ margin: 0, fontSize: '1.8rem' }}>{group}</h3>
-                            <p style={{ margin: '5px 0', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)' }}>
+                            <h3 className={styles.bloodGroup}>{group}</h3>
+                            <p className={styles.units}>
                                 {item ? `${item.units} ${t('dashboard.hospital.blood.units')}` : `0 ${t('dashboard.hospital.blood.units')}`}
                             </p>
-                            {item && <span style={{ fontSize: '0.8rem', color: '#64748B' }}>{t('dashboard.hospital.blood.last_updated')}: {new Date(item.last_updated).toLocaleDateString()}</span>}
+                            {item && <span className={styles.lastUpdated}>{t('dashboard.hospital.blood.last_updated')}: {new Date(item.last_updated).toLocaleDateString()}</span>}
                         </div>
                     );
                 })}
             </div>
 
             {showModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
                         <h3>{t('dashboard.hospital.blood.modal_title')}</h3>
 
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label style={{ display: 'block', marginBottom: '5px' }}>{t('dashboard.hospital.blood.blood_group')}</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>{t('dashboard.hospital.blood.blood_group')}</label>
                             <select
                                 value={selectedGroup} onChange={e => setSelectedGroup(e.target.value)}
-                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                                className={styles.select}
                             >
                                 {BLOOD_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
                             </select>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', marginBottom: '5px' }}>{t('dashboard.hospital.blood.units_to_add')}</label>
+                        <div className={styles.formGroupLong}>
+                            <label className={styles.label}>{t('dashboard.hospital.blood.units_to_add')}</label>
                             <input
                                 type="number" min="1"
                                 value={units} onChange={e => setUnits(Number(e.target.value))}
-                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                                className={styles.input}
                             />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
-                            <button onClick={updateInventory} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.save')}</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setShowModal(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
+                            <button onClick={updateInventory} className={styles.saveBtn}>{t('common.save')}</button>
                         </div>
                     </div>
                 </div>

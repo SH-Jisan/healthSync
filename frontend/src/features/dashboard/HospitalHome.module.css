@@ -1,0 +1,23 @@
+.tabsContainer {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+}
+
+.tabButton {
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.tabButton.active {
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+}

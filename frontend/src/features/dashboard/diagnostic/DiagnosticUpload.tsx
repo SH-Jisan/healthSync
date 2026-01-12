@@ -6,6 +6,7 @@ import {
     User,
 } from 'phosphor-react';
 //import { useTranslation } from 'react-i18next';
+import styles from './DiagnosticUpload.module.css';
 
 interface SimplePatient {
     id: string;
@@ -77,22 +78,19 @@ export default function DiagnosticUpload() {
     };
 
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Upload Patient Report</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>Upload Patient Report</h2>
 
             {/* Search Section */}
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
+            <div className={styles.searchSection}>
                 <input
                     placeholder="Patient Email or Phone"
                     value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                    style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
+                    className={styles.searchInput}
                 />
                 <button
                     onClick={searchPatient}
-                    style={{
-                        background: 'var(--primary)', color: 'white', border: 'none', padding: '12px 24px',
-                        borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
-                    }}
+                    className={styles.searchBtn}
                 >
                     <MagnifyingGlass size={20} />
                 </button>
@@ -100,41 +98,37 @@ export default function DiagnosticUpload() {
 
             {/* Upload Form (Visible if patient found) */}
             {patient && (
-                <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
-                        <div style={{ padding: '10px', background: '#E0F2F1', borderRadius: '50%', color: 'var(--primary)' }}><User size={24} /></div>
+                <div className={styles.uploadForm}>
+                    <div className={styles.patientInfo}>
+                        <div className={styles.patientAvatar}><User size={24} /></div>
                         <div>
-                            <h3 style={{ margin: 0 }}>{patient.full_name}</h3>
-                            <small style={{ color: 'var(--text-secondary)' }}>{patient.phone || patient.email}</small>
+                            <h3 className={styles.patientName}>{patient.full_name}</h3>
+                            <small className={styles.patientContact}>{patient.phone || patient.email}</small>
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Report Title</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>Report Title</label>
                         <input
                             placeholder="e.g. Blood Test Result"
                             value={reportTitle} onChange={e => setReportTitle(e.target.value)}
-                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            className={styles.titleInput}
                         />
                     </div>
 
-                    <div style={{ marginBottom: '2rem' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Select File (PDF/Image)</label>
+                    <div className={styles.fileGroup}>
+                        <label className={styles.label}>Select File (PDF/Image)</label>
                         <input
                             type="file" accept="image/*,.pdf"
                             onChange={e => setFile(e.target.files?.[0] || null)}
-                            style={{ width: '100%' }}
+                            className={styles.fileInput}
                         />
                     </div>
 
                     <button
                         onClick={handleUpload}
                         disabled={uploading}
-                        style={{
-                            width: '100%', padding: '14px', background: '#166534', color: 'white',
-                            border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer',
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
-                        }}
+                        className={styles.uploadBtn}
                     >
                         {uploading ? 'Uploading...' : <><UploadSimple size={20} /> Upload & Send</>}
                     </button>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { Envelope, Lock } from 'phosphor-react';
+import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
     const { t } = useTranslation();
@@ -31,46 +32,24 @@ export default function LoginPage() {
         setLoading(false);
     };
 
-    const inputGroupStyle: React.CSSProperties = {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        padding: '10px',
-        borderRadius: '8px',
-        border: '1px solid #ccc',
-        background: 'white',
-    };
-
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
+        <div className={styles.container}>
             <form
                 onSubmit={handleLogin}
-                style={{
-                    padding: '2rem',
-                    background: 'var(--surface)',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                    width: '320px',
-                }}
+                className={styles.formBox}
             >
                 {/* Header */}
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h1
-                        style={{
-                            color: 'var(--primary)',
-                            fontSize: '2rem',
-                            marginBottom: '0.5rem',
-                        }}
-                    >
+                <div className={styles.header}>
+                    <h1 className={styles.title}>
                         {t('auth.welcome_back')}
                     </h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>
+                    <p className={styles.subtitle}>
                         {t('auth.login_subtitle')}
                     </p>
                 </div>
 
                 {/* Email */}
-                <div style={inputGroupStyle}>
+                <div className={styles.inputGroup}>
                     <Envelope size={20} color="var(--text-secondary)" />
                     <input
                         required
@@ -78,17 +57,12 @@ export default function LoginPage() {
                         placeholder={t('auth.email_label')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        style={{
-                            border: 'none',
-                            outline: 'none',
-                            width: '100%',
-                            fontSize: '1rem',
-                        }}
+                        className={styles.input}
                     />
                 </div>
 
                 {/* Password */}
-                <div style={{ ...inputGroupStyle, marginTop: '1rem' }}>
+                <div className={`${styles.inputGroup} ${styles.inputGroupMargin}`}>
                     <Lock size={20} color="var(--text-secondary)" />
                     <input
                         required
@@ -96,12 +70,7 @@ export default function LoginPage() {
                         placeholder={t('auth.password_label')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        style={{
-                            border: 'none',
-                            outline: 'none',
-                            width: '100%',
-                            fontSize: '1rem',
-                        }}
+                        className={styles.input}
                     />
                 </div>
 
@@ -109,37 +78,17 @@ export default function LoginPage() {
                 <button
                     type="submit"
                     disabled={loading}
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        marginTop: '1.5rem',
-                        background: 'var(--primary)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                    }}
+                    className={styles.submitBtn}
                 >
                     {loading ? t('common.loading') : t('auth.login_button')}
                 </button>
 
                 {/* Signup Link */}
-                <p
-                    style={{
-                        textAlign: 'center',
-                        marginTop: '1.5rem',
-                        color: 'var(--text-secondary)',
-                    }}
-                >
+                <p className={styles.signupText}>
                     {t('auth.no_account')}{' '}
                     <Link
                         to="/signup"
-                        style={{
-                            color: 'var(--primary)',
-                            fontWeight: 'bold',
-                            textDecoration: 'none',
-                        }}
+                        className={styles.link}
                     >
                         {t('auth.create_account')}
                     </Link>

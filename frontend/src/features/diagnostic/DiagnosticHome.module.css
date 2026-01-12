@@ -1,0 +1,27 @@
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tabsContainer {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 2rem;
+}
+
+.tabButton {
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 3px solid transparent;
+    text-transform: capitalize;
+}
+
+.tabButton.active {
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+}

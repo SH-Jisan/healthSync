@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
 import { Buildings, Plus, Trash, Clock } from 'phosphor-react';
+import styles from './DoctorChambers.module.css';
 
 interface Hospital {
     id: string;
@@ -69,45 +70,36 @@ export default function DoctorChambers() {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('dashboard.doctor.chambers.title')}</h2>
+            <div className={styles.header}>
+                <h2 className={styles.title}>{t('dashboard.doctor.chambers.title')}</h2>
                 <button
                     onClick={() => setShowModal(true)}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--primary)',
-                        color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
-                    }}
+                    className={styles.addBtn}
                 >
                     <Plus size={20} /> {t('dashboard.doctor.chambers.add_btn')}
                 </button>
             </div>
 
             {hospitals.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
+                <div className={styles.noChambers}>
                     {t('dashboard.doctor.chambers.no_chambers')}
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                <div className={styles.chamberGrid}>
                     {hospitals.map(h => (
-                        <div key={h.id} style={{
-                            background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-                            border: '1px solid var(--border)', position: 'relative'
-                        }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                        <div key={h.id} className={styles.chamberCard}>
+                            <div className={styles.chamberHeader}>
                                 <Buildings size={24} color="var(--primary)" />
-                                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{h.hospital_name}</h3>
+                                <h3 className={styles.chamberName}>{h.hospital_name}</h3>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                            <div className={styles.visitingHours}>
                                 <Clock size={16} />
                                 {h.visiting_hours}
                             </div>
 
                             <button
                                 onClick={() => deleteHospital(h.id)}
-                                style={{
-                                    position: 'absolute', top: '15px', right: '15px', background: '#FEE2E2',
-                                    color: '#DC2626', border: 'none', padding: '6px', borderRadius: '6px', cursor: 'pointer'
-                                }}
+                                className={styles.deleteBtn}
                             >
                                 <Trash size={16} />
                             </button>
@@ -117,22 +109,22 @@ export default function DoctorChambers() {
             )}
 
             {showModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
                         <h3>{t('dashboard.doctor.chambers.modal_title')}</h3>
                         <input
                             placeholder={t('dashboard.doctor.chambers.name_placeholder')}
                             value={name} onChange={e => setName(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            className={styles.input}
                         />
                         <input
                             placeholder={t('dashboard.doctor.chambers.hours_placeholder')}
                             value={hours} onChange={e => setHours(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            className={styles.input}
                         />
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
-                            <button onClick={addHospital} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.save') || 'Save'}</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setShowModal(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
+                            <button onClick={addHospital} className={styles.saveBtn}>{t('common.save') || 'Save'}</button>
                         </div>
                     </div>
                 </div>

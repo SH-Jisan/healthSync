@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { MagnifyingGlass, Person } from 'phosphor-react';
+import styles from './DiagnosticSearch.module.css';
 
 interface PatientProfile {
     id: string;
@@ -108,49 +109,36 @@ export default function DiagnosticSearch() {
     };
 
     return (
-        <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
+        <div className={styles.container}>
+            <div className={styles.searchBar}>
                 <input
                     type="email"
                     placeholder={t('dashboard.diagnostic.search.placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                    className={styles.searchInput}
                 />
                 <button
                     onClick={handleSearch}
                     disabled={loading}
-                    style={{
-                        background: 'var(--primary)', color: 'white', border: 'none',
-                        padding: '0 20px', borderRadius: '8px', cursor: 'pointer'
-                    }}
+                    className={styles.searchBtn}
                 >
                     {loading ? '...' : <MagnifyingGlass size={20} />}
                 </button>
             </div>
 
             {searchedPatient && (
-                <div style={{
-                    background: 'var(--surface)', padding: '2rem', borderRadius: '16px',
-                    border: '1px solid var(--border)', textAlign: 'center'
-                }}>
-                    <div style={{
-                        width: '60px', height: '60px', background: '#E0F2F1', borderRadius: '50%',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem',
-                        color: 'var(--primary)'
-                    }}>
+                <div className={styles.resultCard}>
+                    <div className={styles.resultAvatar}>
                         <Person size={32} />
                     </div>
                     <h3>{searchedPatient.full_name}</h3>
-                    <p style={{ color: 'var(--text-secondary)' }}>{searchedPatient.email}</p>
+                    <p className={styles.resultEmail}>{searchedPatient.email}</p>
 
                     <button
                         onClick={assignPatient}
                         disabled={loading}
-                        style={{
-                            marginTop: '1.5rem', padding: '12px 24px', background: 'var(--primary)',
-                            color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
-                        }}
+                        className={styles.assignBtn}
                     >
                         {t('dashboard.diagnostic.search.assign_btn')}
                     </button>
@@ -158,30 +146,27 @@ export default function DiagnosticSearch() {
             )}
 
             {showRegister && (
-                <div style={{
-                    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100
-                }}>
-                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
                         <h3>{t('dashboard.diagnostic.search.register_title')}</h3>
                         <input
                             placeholder={t('dashboard.diagnostic.search.name_ph')}
                             value={newName} onChange={e => setNewName(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '8px' }}
+                            className={styles.modalInput}
                         />
                         <input
                             placeholder={t('dashboard.diagnostic.search.email_ph')}
                             value={newEmail} onChange={e => setNewEmail(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '8px' }}
+                            className={styles.modalInput}
                         />
                         <input
                             placeholder={t('dashboard.diagnostic.search.phone_ph')}
                             value={newPhone} onChange={e => setNewPhone(e.target.value)}
-                            style={{ width: '100%', padding: '10px', marginBottom: '20px', border: '1px solid #ccc', borderRadius: '8px' }}
+                            className={styles.modalInput}
                         />
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowRegister(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
-                            <button onClick={handleRegister} disabled={loading} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.diagnostic.search.register_btn')}</button>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => setShowRegister(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
+                            <button onClick={handleRegister} disabled={loading} className={styles.registerBtn}>{t('dashboard.diagnostic.search.register_btn')}</button>
                         </div>
                     </div>
                 </div>

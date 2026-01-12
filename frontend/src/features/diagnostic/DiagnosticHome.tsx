@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import DiagnosticSearch from './DiagnosticSearch';
 import DiagnosticPatients, { type Patient } from './DiagnosticPatients';
 import DiagnosticPatientView from './DiagnosticPatientView';
+import styles from './DiagnosticHome.module.css';
 
 export default function DiagnosticHome() {
     const { t } = useTranslation();
@@ -14,18 +15,13 @@ export default function DiagnosticHome() {
     }
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <div style={{ marginBottom: '2rem', borderBottom: '1px solid var(--border)', display: 'flex', gap: '2rem' }}>
+        <div className={styles.container}>
+            <div className={styles.tabsContainer}>
                 {['assigned', 'search'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        style={{
-                            padding: '1rem 0', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600,
-                            color: activeTab === tab ? 'var(--primary)' : 'var(--text-secondary)',
-                            borderBottom: activeTab === tab ? '3px solid var(--primary)' : '3px solid transparent',
-                            textTransform: 'capitalize'
-                        }}
+                        className={`${styles.tabButton} ${activeTab === tab ? styles.active : ''}`}
                     >
                         {tab === 'assigned' ? t('dashboard.diagnostic.tabs.assigned') : t('dashboard.diagnostic.tabs.search')}
                     </button>
