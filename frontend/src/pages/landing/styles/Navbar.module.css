@@ -1,20 +1,10 @@
 .navbar {
     width: 100%;
-    height: 60px;
-
-    /* --- Glassmorphism Effect Start --- */
-    background: rgba(255, 255, 255, 0.8);
-    /* হালকা সাদা স্বচ্ছ লেয়ার */
-    backdrop-filter: blur(5px);
-    /* পেছনের কন্টেন্ট ঝাপসা করবে */
+    height: 70px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    /* সাফারির জন্য সাপোর্ট */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-    /* নিচে হালকা বর্ডার */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-    /* খুব সফট শ্যাডো */
-    /* --- Glassmorphism Effect End --- */
-
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: row;
     align-items: center;

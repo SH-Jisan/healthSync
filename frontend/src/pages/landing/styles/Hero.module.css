@@ -9,9 +9,9 @@
     position: relative;
     z-index: 0;
     overflow: hidden;
-    padding-top: 60px;
-    /* Navbar height */
+    padding: 100px 20px 60px;
     text-align: center;
+    background: linear-gradient(135deg, #0056D2 0%, #009688 100%);
 }
 
 .gradient_box::before {
@@ -19,21 +19,15 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
-
-    /* [UPDATED] Blue to Teal Gradient */
-    /* এটি আপনার লোগোর Health (Blue) এবং Sync (Green) এর সাথে পারফেক্টলি মিশে যাবে */
-    background: linear-gradient(135deg, #0056D2 0%, #009688 100%);
-
-    /* চাইলে একটু প্যাটার্ন বা টেক্সচার যোগ করতে পারেন (Optional) */
-    opacity: 0.95;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
     z-index: -1;
 }
 
 .content_container {
-    max-width: 1200px;
-    padding: 0 20px;
+    max-width: 1100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,75 +35,74 @@
 }
 
 .heroTitle {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     font-weight: 800;
-    margin-bottom: 20px;
-    line-height: 1.2;
-    animation: fadeInDown 1s ease-out;
+    margin-bottom: 25px;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    animation: fadeInDown 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .highlight {
-    /* [UPDATED] Highlight color updated to a bright lime/yellow-green for contrast on blue bg */
     color: #AEEA00;
-    /* অথবা সাদা রাখতে পারেন যদি বেশি কালারফুল মনে হয় */
+    text-shadow: 0 0 15px rgba(174, 234, 0, 0.2);
 }
 
 .heroDesc {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    max-width: 700px;
+    font-size: 1.25rem;
+    margin-bottom: 45px;
+    max-width: 750px;
     line-height: 1.6;
-    color: #E0F2F1;
-    /* খুব হালকা টিল কালার */
-    animation: fadeInUp 1s ease-out 0.3s backwards;
+    color: rgba(224, 242, 241, 0.9);
+    font-weight: 300;
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
 .ctaButtons {
     display: flex;
     gap: 20px;
-    animation: fadeInUp 1s ease-out 0.6s backwards;
+    animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
 }
 
 .ctaButtons button {
-    padding: 14px 32px;
+    padding: 16px 36px;
     border: none;
     border-radius: 50px;
-    /* Rounded pill shape looks more modern */
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .primaryBtn {
-    background-color: white;
+    background: white;
     color: #0056D2;
-    /* Text matches the primary blue */
-    box-shadow: 0 4px 15px rgba(0, 86, 210, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 86, 210, 0.2);
 }
 
 .primaryBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 86, 210, 0.4);
-    background-color: #f8f9fa;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 86, 210, 0.3);
+    background: #f8f9fa;
 }
 
 .secondaryBtn {
-    background-color: transparent;
-    border: 2px solid white;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: white;
 }
 
 .secondaryBtn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Animations... (বাকি সব আগের মতোই থাকবে) */
 @keyframes fadeInDown {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-40px);
     }
 
     to {
@@ -121,7 +114,7 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
 
     to {
@@ -132,29 +125,21 @@
 
 @media(max-width: 768px) {
     .heroTitle {
-        font-size: 2.2rem;
-        margin-bottom: 15px;
+        font-size: 2.6rem;
+        letter-spacing: -0.5px;
     }
 
     .heroDesc {
-        font-size: 1rem;
-        margin-bottom: 30px;
-        padding: 0 10px;
+        font-size: 1.1rem;
     }
 
     .ctaButtons {
         flex-direction: column;
         width: 100%;
-        gap: 12px;
+        gap: 15px;
     }
 
     .ctaButtons button {
         width: 100%;
-        padding: 12px;
-        font-size: 1rem;
-    }
-
-    .gradient_box {
-        padding-top: 50px;
     }
 }

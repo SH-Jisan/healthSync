@@ -1,15 +1,23 @@
 :root {
     /* Brand Colors */
     --primary: #00796B;
-    --primary-light: #B2DFDB; /* Light background for active states */
+    --primary-hsl: 173, 100%, 24%;
+    --primary-light: #B2DFDB;
+    --primary-light-hsl: 171, 41%, 78%;
     --primary-dark: #004D40;
+    --primary-dark-hsl: 171, 100%, 13%;
     --accent: #00BFA5;
+    --accent-hsl: 172, 100%, 37%;
 
     /* Neutral Colors */
-    --background: #F3F4F6; /* Softer gray */
+    --background: #F3F4F6;
+    --background-hsl: 220, 14%, 96%;
     --surface: #FFFFFF;
+    --surface-hsl: 0, 0%, 100%;
     --text-primary: #1F2937;
+    --text-primary-hsl: 215, 28%, 17%;
     --text-secondary: #6B7280;
+    --text-secondary-hsl: 220, 9%, 46%;
     --border: #E5E7EB;
 
     /* Status Colors */
@@ -52,7 +60,12 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin: 0;
     font-weight: 600;
 }
