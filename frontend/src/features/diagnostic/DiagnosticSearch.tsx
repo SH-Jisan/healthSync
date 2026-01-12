@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '../../lib/supabaseClient';
 import { MagnifyingGlass, Person } from 'phosphor-react';
-import styles from './DiagnosticSearch.module.css';
+import styles from './styles/DiagnosticSearch.module.css';
 
 interface PatientProfile {
     id: string;
@@ -42,7 +42,7 @@ export default function DiagnosticSearch() {
                 setSearchedPatient(data as PatientProfile);
             } else {
                 alert(t('dashboard.diagnostic.search.not_found_alert'));
-                setNewEmail(email); // Pre-fill email
+                setNewEmail(email);
                 setShowRegister(true);
             }
         } catch (err: unknown) {
@@ -132,7 +132,7 @@ export default function DiagnosticSearch() {
                     <div className={styles.resultAvatar}>
                         <Person size={32} />
                     </div>
-                    <h3>{searchedPatient.full_name}</h3>
+                    <h3 className={styles.resultName}>{searchedPatient.full_name}</h3>
                     <p className={styles.resultEmail}>{searchedPatient.email}</p>
 
                     <button
@@ -148,7 +148,7 @@ export default function DiagnosticSearch() {
             {showRegister && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <h3>{t('dashboard.diagnostic.search.register_title')}</h3>
+                        <h3 className={styles.modalTitle}>{t('dashboard.diagnostic.search.register_title')}</h3>
                         <input
                             placeholder={t('dashboard.diagnostic.search.name_ph')}
                             value={newName} onChange={e => setNewName(e.target.value)}

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '../../lib/supabaseClient';
 import { ArrowLeft, CheckCircle, Upload, Plus } from 'phosphor-react';
 import UploadModal from '../upload/UploadModal';
-import styles from './DiagnosticPatientView.module.css';
+import styles from './styles/DiagnosticPatientView.module.css';
 
 interface Patient {
     id: string;
@@ -63,9 +63,9 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchOrders();
         fetchAvailableTests();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleCreateOrder = async () => {
@@ -88,7 +88,7 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
         else {
             alert(t('dashboard.diagnostic.view.order_created'));
             setShowNewOrder(false);
-            fetchOrders();
+            await fetchOrders();
             setSelectedTests([]);
             setTotalAmount(0);
         }
@@ -97,12 +97,12 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
     const togglePayment = async (order: Order) => {
         const newStatus = order.status === 'PAID' ? 'DUE' : 'PAID';
         await supabase.from('patient_payments').update({ status: newStatus }).eq('id', order.id);
-        fetchOrders();
+        await fetchOrders();
     };
 
     const markCompleted = async (orderId: string) => {
         await supabase.from('patient_payments').update({ report_status: 'COMPLETED' }).eq('id', orderId);
-        fetchOrders();
+        await fetchOrders();
     };
 
     return (
@@ -125,23 +125,20 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
             {/* Orders List */}
             <div className={styles.ordersGrid}>
                 {orders.map(order => (
-                    <div key={order.id} className={styles.orderCard} style={{
-                        borderLeft: order.report_status === 'PENDING' ? '5px solid orange' : '5px solid green'
-                    }}>
+                    <div
+                        key={order.id}
+                        className={`${styles.orderCard} ${order.report_status === 'PENDING' ? styles.orderCardPending : styles.orderCardCompleted}`}
+                    >
                         <div className={styles.orderHeader}>
                             <div>
                                 <h4 className={styles.testNames}>{order.test_names.join(', ')}</h4>
                                 <small className={styles.orderDate}>{new Date(order.created_at).toLocaleString()}</small>
                             </div>
-                            <div style={{ textAlign: 'right' }}>
+                            <div className={styles.orderRight}>
                                 <div className={styles.amount}>৳{order.total_amount}</div>
                                 <div
                                     onClick={() => togglePayment(order)}
-                                    className={styles.paymentStatus}
-                                    style={{
-                                        color: order.status === 'PAID' ? 'green' : 'red',
-                                        borderColor: 'currentColor'
-                                    }}
+                                    className={`${styles.paymentStatus} ${order.status === 'PAID' ? styles.statusPaid : styles.statusDue}`}
                                 >
                                     {order.status}
                                 </div>

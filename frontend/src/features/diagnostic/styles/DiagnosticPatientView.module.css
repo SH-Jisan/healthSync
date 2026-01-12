@@ -1,0 +1,228 @@
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.backBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+}
+
+.patientName {
+    margin: 0;
+    color: var(--primary);
+}
+
+.patientContact {
+    background: #eee;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.newOrderBtn {
+    margin-bottom: 2rem;
+    padding: 12px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.newOrderBtn:hover {
+    background: var(--primary-dark);
+}
+
+/* Orders List */
+.ordersGrid {
+    display: grid;
+    gap: 1rem;
+}
+
+.orderCard {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    border-left: 5px solid transparent; /* Default */
+}
+
+/* Status Borders for Order Card */
+.orderCardPending {
+    border-left-color: orange;
+}
+
+.orderCardCompleted {
+    border-left-color: green;
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.testNames {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.orderDate {
+    color: var(--text-secondary);
+}
+
+.orderRight {
+    text-align: right;
+}
+
+.amount {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+/* Payment Status Badges */
+.paymentStatus {
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid currentColor;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.8rem;
+}
+
+.statusPaid {
+    color: green;
+}
+
+.statusDue {
+    color: red;
+}
+
+.orderActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.uploadBtn {
+    background: #3B82F6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+}
+
+.completedStatus {
+    color: green;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+/* Modals */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modalContent {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.testList {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.testItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.testItem:last-child {
+    border-bottom: none;
+}
+
+.testLabel {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+}
+
+.totalAmount {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.modalActions {
+    display: flex;
+    gap: 10px;
+}
+
+.cancelBtn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}
+
+.createBtn {
+    flex: 1;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}

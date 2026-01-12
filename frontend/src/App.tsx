@@ -5,7 +5,7 @@ import type { Session } from '@supabase/supabase-js'; // Import Session type
 import { supabase } from './lib/supabaseClient';
 
 // Pages
-import LandingPage from './pages/LandingPage';
+import LandingPage from './pages/landing/LandingPage';
 import LoginPage from './features/auth/LoginPage';
 import AboutPage from './features/about/AboutPage';
 
@@ -13,15 +13,15 @@ import AboutPage from './features/about/AboutPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 
 // Features
-import DashboardPage from './features/dashboard/DashboardPage';
+import DashboardPage from './pages/dashboard/DashboardPage';
 import ProfilePage from './features/profile/ProfilePage';
 import BloodHome from './features/blood/BloodHome';
 import RequestBlood from './features/blood/RequestBlood';
 import BloodFeed from './features/blood/BloodFeed';
 import DonorRegistration from './features/blood/DonorRegistration';
-import DoctorList from './features/dashboard/doctor/DoctorList.tsx';
+import DoctorList from './features/doctor/DoctorList.tsx';
 import SignupPage from "./features/auth/SignupPage.tsx";
-import DoctorPatientProfile from "./features/dashboard/doctor/DoctorPatientProfile.tsx";
+import DoctorPatientProfile from "./features/doctor/DoctorPatientProfile.tsx";
 import DonorSearch from "./features/blood/DonorSearch.tsx";
 import MyBloodRequests from "./features/blood/MyBloodRequests.tsx";
 import PatientAppointments from "./features/appointments/PatientAppointments.tsx";
@@ -54,7 +54,7 @@ function App() {
                 {/* Public Routes */}
                 <Route path="/" element={!session ? <LandingPage /> : <Navigate to="/dashboard" />} />
                 <Route path="/login" element={!session ? <LoginPage /> : <Navigate to="/dashboard" />} />
-                <Route path="/signup" element={!session? <SignupPage/> : <Navigate to="/dashboard" />} />
+                <Route path="/signup" element={!session ? <SignupPage /> : <Navigate to="/dashboard" />} />
                 <Route path="/about" element={<AboutPage />} />
 
                 {/* Protected Routes (Dashboard Layout) */}
@@ -62,17 +62,17 @@ function App() {
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/dashboard/patient/:id" element={<DoctorPatientProfile />} />
                     <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/profile/edit" element={<EditProfile/>}/>
-                    <Route path="/appointments" element={<PatientAppointments/>} />
-                    <Route path="/notifications" element={<NotificationsPage/>} />
+                    <Route path="/profile/edit" element={<EditProfile />} />
+                    <Route path="/appointments" element={<PatientAppointments />} />
+                    <Route path="/notifications" element={<NotificationsPage />} />
 
                     {/* Blood Bank Routes */}
                     <Route path="/blood" element={<BloodHome />} />
                     <Route path="/blood/request" element={<RequestBlood />} />
                     <Route path="/blood/feed" element={<BloodFeed />} />
                     <Route path="/blood/register" element={<DonorRegistration />} />
-                    <Route path="/blood/search" element={<DonorSearch/>} />
-                    <Route path="/blood/my-requests" element={<MyBloodRequests/>}/>
+                    <Route path="/blood/search" element={<DonorSearch />} />
+                    <Route path="/blood/my-requests" element={<MyBloodRequests />} />
 
 
                     {/* Doctor Routes */}

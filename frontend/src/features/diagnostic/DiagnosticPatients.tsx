@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '../../lib/supabaseClient';
 import { User } from 'phosphor-react';
-import styles from './DiagnosticPatients.module.css';
+import styles from './styles/DiagnosticPatients.module.css';
 
 export interface Patient {
     id: string;
     full_name: string;
     email: string;
     phone?: string;
-    // Add other fields as needed based on what is fetched
 }
 
 interface Props {

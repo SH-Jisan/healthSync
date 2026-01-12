@@ -1,5 +1,0 @@
-/* src/components/FadeSection.module.css */
-.fade_section {
-    transition: opacity 0.6s ease-in-out;
-    will-change: opacity;
-}
