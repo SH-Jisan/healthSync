@@ -25,10 +25,14 @@ export default function TimelineView({ userId }: { userId?: string }) {
         const { data, error } = await supabase
             .from('medical_events')
             .select(
-                '*, uploader:uploader_id(full_name, specialty), profiles:patient_id(full_name, phone, age, gender)'
+                '*, uploader:uploader_id(full_name, specialty), profiles:patient_id(full_name, phone)'
             )
             .eq('patient_id', targetId)
             .order('event_date', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching timeline:', error);
+        }
 
         if (!error && data) {
             setEvents(data as unknown as MedicalEvent[]);

@@ -29,8 +29,6 @@ export interface MedicalEvent {
     profiles?: {
         full_name: string;
         phone: string;
-        age?: number | string;
-        gender?: string;
     };
     created_at: string;
 }

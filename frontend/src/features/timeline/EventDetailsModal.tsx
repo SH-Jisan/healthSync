@@ -109,7 +109,6 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
 
                             <div className={styles.patientBar}>
                                 <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
-                                <span><strong>Age/Sex:</strong> {event.profiles?.age || 'N/A'} / {event.profiles?.gender || 'N/A'}</span>
                                 <span><strong>Phone:</strong> {event.profiles?.phone}</span>
                             </div>
 
