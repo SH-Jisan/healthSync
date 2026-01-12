@@ -2,14 +2,37 @@
 export interface MedicalEvent {
     id: string;
     title: string;
-    event_type: 'REPORT' | 'PRESCRIPTION' | 'VACCINATION'; // Enums from DB
+    event_type: 'REPORT' | 'PRESCRIPTION' | 'VACCINATION';
     event_date: string;
     severity: 'HIGH' | 'MEDIUM' | 'LOW';
     summary?: string;
     key_findings?: string[];
     attachment_urls?: string[];
+    extracted_text?: string;
+    vitals?: {
+        bp?: string;
+        hr?: string;
+        temp?: string;
+        weight?: string;
+    };
+    medicines?: {
+        name: string;
+        dosage?: string;
+        duration?: string;
+    }[];
+    uploader?: {
+        id: string;
+        full_name: string;
+        specialty?: string;
+    };
+    patient_id: string;
+    profiles?: {
+        full_name: string;
+        phone: string;
+        age?: number | string;
+        gender?: string;
+    };
     created_at: string;
-    // ai_details?: any; // যদি লাগে
 }
 export interface BloodRequest {
     id: string;

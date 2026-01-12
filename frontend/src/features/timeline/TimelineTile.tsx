@@ -15,9 +15,9 @@ export default function TimelineTile({ event, isLast }: Props) {
 
     const getIcon = () => {
         switch (event.event_type) {
-            case 'PRESCRIPTION': return <Pill size={20} color="#9333EA" />;
-            case 'VACCINATION': return <Syringe size={20} color="#00796B" />;
-            default: return <FileText size={20} color="#00796B" />;
+            case 'PRESCRIPTION': return <Pill size={22} weight="duotone" color="var(--primary)" />;
+            case 'VACCINATION': return <Syringe size={22} weight="duotone" color="#059669" />;
+            default: return <FileText size={22} weight="duotone" color="#2563EB" />;
         }
     };
 
@@ -47,7 +47,12 @@ export default function TimelineTile({ event, isLast }: Props) {
                     </span>
                 </div>
 
-                <h3 className={styles.title}>{event.title}</h3>
+                <div className={styles.titleRow}>
+                    <h3 className={styles.title}>{event.title}</h3>
+                    <span className={styles.uploader}>
+                        by {event.uploader?.full_name || 'Self'}
+                    </span>
+                </div>
 
                 {event.summary && <p className={styles.summary}>{event.summary}</p>}
 

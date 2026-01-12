@@ -1,36 +1,13 @@
 import React, { useState, useRef } from 'react';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
-    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle
+    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
+    IdentificationCard
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
+import type { MedicalEvent } from '../../types';
 import styles from './styles/EventDetailsModal.module.css';
-
-interface Medicine {
-    name: string;
-    dosage?: string;
-    duration?: string;
-}
-
-interface MedicalEvent {
-    id: string;
-    event_type: string;
-    title: string;
-    event_date: string;
-    summary?: string;
-    uploader?: { full_name?: string };
-    vitals?: {
-        bp?: string;
-        hr?: string;
-        temp?: string;
-        weight?: string;
-    };
-    key_findings?: string[];
-    medicines?: Medicine[];
-    extracted_text?: string;
-    attachments?: string[];
-}
 
 interface EventDetailsProps {
     event: MedicalEvent;
@@ -38,7 +15,9 @@ interface EventDetailsProps {
 }
 
 export default function EventDetailsModal({ event, onClose }: EventDetailsProps) {
-    const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file' | 'prescription'>(
+        event.event_type === 'PRESCRIPTION' ? 'prescription' : 'overview'
+    );
     const printRef = useRef<HTMLDivElement>(null);
 
     const getImageUrl = (path: string) => {
@@ -48,19 +27,14 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
     };
 
     const handlePrint = () => {
-        const printContent = printRef.current?.innerHTML;
-        const originalContent = document.body.innerHTML;
-        if (printContent) {
-            document.body.innerHTML = printContent;
-            window.print();
-            document.body.innerHTML = originalContent;
-            window.location.reload();
-        }
+        window.print();
     };
 
     const handleDownload = async () => {
-        if (event.attachments && event.attachments.length > 0) {
-            const url = getImageUrl(event.attachments[0]);
+        if (event.attachment_urls && event.attachment_urls.length > 0) {
+            const path = event.attachment_urls[0];
+            const { data } = supabase.storage.from('medical-reports').getPublicUrl(path);
+            const url = data.publicUrl;
             if (url) {
                 const a = document.createElement('a');
                 a.href = url;
@@ -72,10 +46,14 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
         }
     };
 
+    const tabs = ['overview', 'medicines', 'analysis', 'file'];
+    if (event.event_type === 'PRESCRIPTION') {
+        tabs.unshift('prescription');
+    }
+
     return (
         <div className={styles.overlay}>
             <div className={styles.modal}>
-
                 {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.headerInfo}>
@@ -100,7 +78,7 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
 
                 {/* Tabs */}
                 <div className={styles.tabs}>
-                    {['overview', 'medicines', 'analysis', 'file'].map((tab) => (
+                    {tabs.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab as any)}
@@ -112,7 +90,58 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                 </div>
 
                 {/* Content Area */}
-                <div className={styles.content} ref={printRef}>
+                <div className={styles.content}>
+
+                    {/* TAB: PRESCRIPTION (Digital View) */}
+                    {activeTab === 'prescription' && (
+                        <div className={styles.prescriptionView}>
+                            <div className={styles.prescriptionHeader}>
+                                <div className={styles.brand}>
+                                    <h1>HealthSync</h1>
+                                    <p>Smart Healthcare Solution</p>
+                                </div>
+                                <div className={styles.docInfo}>
+                                    <h3>Dr. {event.uploader?.full_name}</h3>
+                                    <p>{event.uploader?.specialty}</p>
+                                    <p>{format(new Date(event.event_date), 'dd MMM yyyy')}</p>
+                                </div>
+                            </div>
+
+                            <div className={styles.patientBar}>
+                                <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
+                                <span><strong>Age/Sex:</strong> {event.profiles?.age || 'N/A'} / {event.profiles?.gender || 'N/A'}</span>
+                                <span><strong>Phone:</strong> {event.profiles?.phone}</span>
+                            </div>
+
+                            <div className={styles.rxSection}>
+                                <h2>Rx</h2>
+                                <div className={styles.rxList}>
+                                    {event.medicines && event.medicines.length > 0 ? (
+                                        event.medicines.map((med, i) => (
+                                            <div key={i} className={styles.medItem}>
+                                                <strong>{med.name}</strong>
+                                                <span>{med.dosage} — {med.duration}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p>{event.summary || event.extracted_text}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {event.summary && activeTab === 'prescription' && (
+                                <div className={styles.adviceBox}>
+                                    <h4>Advice:</h4>
+                                    <p>{event.summary}</p>
+                                </div>
+                            )}
+
+                            <div className={styles.signatureArea}>
+                                <div className={styles.sigLine}></div>
+                                <p>Doctor's Signature</p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* TAB: OVERVIEW */}
                     {activeTab === 'overview' && (
@@ -151,20 +180,20 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                             {event.medicines && event.medicines.length > 0 ? (
                                 <table className={styles.medTable}>
                                     <thead>
-                                    <tr>
-                                        <th>Medicine Name</th>
-                                        <th>Dosage</th>
-                                        <th>Duration</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Medicine Name</th>
+                                            <th>Dosage</th>
+                                            <th>Duration</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {event.medicines.map((med, idx) => (
-                                        <tr key={idx}>
-                                            <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
-                                            <td>{med.dosage || '-'}</td>
-                                            <td>{med.duration || '-'}</td>
-                                        </tr>
-                                    ))}
+                                        {event.medicines.map((med, idx) => (
+                                            <tr key={idx}>
+                                                <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
+                                                <td>{med.dosage || '-'}</td>
+                                                <td>{med.duration || '-'}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             ) : (
@@ -209,9 +238,9 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                     {/* TAB: FILE */}
                     {activeTab === 'file' && (
                         <div className={styles.fileContainer}>
-                            {event.attachments && event.attachments.length > 0 ? (
+                            {event.attachment_urls && event.attachment_urls.length > 0 ? (
                                 <img
-                                    src={getImageUrl(event.attachments[0])!}
+                                    src={getImageUrl(event.attachment_urls[0])!}
                                     alt="Document"
                                     className={styles.attachmentImg}
                                 />
@@ -223,6 +252,48 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                             )}
                         </div>
                     )}
+                </div>
+            </div>
+
+            {/* PRINT-ONLY ELEMENT */}
+            <div className={styles.printOnly} ref={printRef}>
+                <div className={styles.prescriptionView}>
+                    <div className={styles.prescriptionHeader}>
+                        <div className={styles.brand}>
+                            <h1>HealthSync</h1>
+                        </div>
+                        <div className={styles.docInfo}>
+                            <h3>Dr. {event.uploader?.full_name}</h3>
+                            <p>{event.uploader?.specialty}</p>
+                            <p>{format(new Date(event.event_date), 'dd MMM yyyy')}</p>
+                        </div>
+                    </div>
+                    <div className={styles.patientBar}>
+                        <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
+                        <span><strong>Phone:</strong> {event.profiles?.phone}</span>
+                    </div>
+                    <div className={styles.rxSection}>
+                        <h2>Rx</h2>
+                        <div className={styles.rxList}>
+                            {event.medicines && event.medicines.length > 0 ? (
+                                event.medicines.map((med, i) => (
+                                    <div key={i} className={styles.medItem}>
+                                        <strong>{med.name}</strong> — {med.dosage} ({med.duration})
+                                    </div>
+                                ))
+                            ) : (
+                                <p>{event.summary}</p>
+                            )}
+                        </div>
+                    </div>
+                    <div className={styles.adviceBox}>
+                        <h4>Notes:</h4>
+                        <p>{event.summary}</p>
+                    </div>
+                    <div className={styles.signatureArea}>
+                        <div className={styles.sigLine}></div>
+                        <p>Doctor's Signature</p>
+                    </div>
                 </div>
             </div>
         </div>
