@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { supabase } from '../../../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { Users, CalendarCheck, FileText, ArrowRight } from 'phosphor-react';
 // import { useNavigate } from 'react-router-dom'; // <--- রিমুভ করা হয়েছে

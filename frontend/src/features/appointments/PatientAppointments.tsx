@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import {
@@ -42,7 +42,7 @@ export default function PatientAppointments() {
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -53,7 +53,7 @@ export default function PatientAppointments() {
                 .select('*, doctor:doctor_id(full_name, specialty), hospital:hospital_id(full_name, address)')
                 .eq('patient_id', user.id)
                 .order('appointment_date', { ascending: false });
-            if (data) setAppointments(data as any);
+            if (data) setAppointments(data as unknown as Appointment[]);
         }
         else if (activeTab === 'prescriptions') {
             const { data } = await supabase
@@ -62,7 +62,7 @@ export default function PatientAppointments() {
                 .eq('patient_id', user.id)
                 .eq('event_type', 'PRESCRIPTION')
                 .order('event_date', { ascending: false });
-            if (data) setPrescriptions(data as any);
+            if (data) setPrescriptions(data as unknown as Prescription[]);
         }
         else if (activeTab === 'diagnostic') {
             const { data } = await supabase
@@ -70,16 +70,16 @@ export default function PatientAppointments() {
                 .select('*, provider:provider_id(full_name)')
                 .eq('patient_id', user.id)
                 .order('created_at', { ascending: false });
-            if (data) setDiagnostics(data as any);
+            if (data) setDiagnostics(data as unknown as Diagnostic[]);
         }
 
         setLoading(false);
-    };
+    }, [activeTab]);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
-    }, [activeTab]);
+    }, [fetchData]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -103,7 +103,7 @@ export default function PatientAppointments() {
                 ].map(tab => (
                     <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
+                        onClick={() => setActiveTab(tab.id as 'appointments' | 'prescriptions' | 'diagnostic' | 'hospitals')}
                         style={{
                             display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 0.5rem',
                             background: 'none', border: 'none', cursor: 'pointer',

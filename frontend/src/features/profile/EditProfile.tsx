@@ -61,7 +61,7 @@ export default function EditProfile() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const updates: any = {
+        const updates: Record<string, string | null | undefined> = {
             full_name: fullName,
             phone: phone,
             // district: address, // If you used district in donor profile, map address to district or add address column

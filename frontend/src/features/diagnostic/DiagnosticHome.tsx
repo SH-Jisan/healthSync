@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DiagnosticSearch from './DiagnosticSearch';
-import DiagnosticPatients from './DiagnosticPatients';
+import DiagnosticPatients, { type Patient } from './DiagnosticPatients';
 import DiagnosticPatientView from './DiagnosticPatientView';
 
 export default function DiagnosticHome() {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('assigned');
-    const [selectedPatient, setSelectedPatient] = useState<any>(null);
+    const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
     if (selectedPatient) {
         return <DiagnosticPatientView patient={selectedPatient} onBack={() => setSelectedPatient(null)} />;

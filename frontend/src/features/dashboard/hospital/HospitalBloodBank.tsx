@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient';
-import { Drop, Activity, Plus } from 'phosphor-react';
+import { Drop, Plus } from 'phosphor-react';
 
 interface BloodInventory {
     id: string;
@@ -22,7 +22,7 @@ export default function HospitalBloodBank() {
     const [selectedGroup, setSelectedGroup] = useState(BLOOD_GROUPS[0]);
     const [units, setUnits] = useState(0);
 
-    const fetchInventory = async () => {
+    const fetchInventory = useCallback(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
@@ -33,11 +33,12 @@ export default function HospitalBloodBank() {
 
         if (data) setInventory(data as BloodInventory[]);
         setLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchInventory();
-    }, []);
+    }, [fetchInventory]);
 
     const updateInventory = async () => {
         const { data: { user } } = await supabase.auth.getUser();

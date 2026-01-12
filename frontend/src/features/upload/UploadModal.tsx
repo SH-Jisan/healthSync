@@ -65,9 +65,10 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
                 onClose();
             }, 1000);
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Upload failed:', error);
-            setStatus(`${t('upload.error_fail')}: ${error.message}`);
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            setStatus(`${t('upload.error_fail')}: ${message}`);
         } finally {
             setUploading(false);
         }

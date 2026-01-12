@@ -3,8 +3,19 @@ import { X, Printer, FileText } from 'phosphor-react';
 import { format } from 'date-fns';
 //import { useTranslation } from 'react-i18next';
 
+interface PrescriptionData {
+    id: string;
+    event_date: string;
+    patient_id: string;
+    uploader?: { full_name?: string; specialty?: string };
+    profiles?: { full_name?: string; age?: string | number; gender?: string; phone?: string };
+    key_findings?: string[];
+    summary?: string;
+    extracted_text?: string;
+}
+
 interface PrescriptionProps {
-    data: any;
+    data: PrescriptionData;
     onClose: () => void;
 }
 

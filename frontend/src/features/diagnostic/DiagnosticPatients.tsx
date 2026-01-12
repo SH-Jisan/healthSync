@@ -3,13 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { User } from 'phosphor-react';
 
+export interface Patient {
+    id: string;
+    full_name: string;
+    email: string;
+    phone?: string;
+    // Add other fields as needed based on what is fetched
+}
+
 interface Props {
-    onSelectPatient: (patient: any) => void;
+    onSelectPatient: (patient: Patient) => void;
 }
 
 export default function DiagnosticPatients({ onSelectPatient }: Props) {
     const { t } = useTranslation();
-    const [patients, setPatients] = useState<any[]>([]);
+    const [patients, setPatients] = useState<Patient[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,7 +30,7 @@ export default function DiagnosticPatients({ onSelectPatient }: Props) {
                 .select('patient:patient_id(*)')
                 .eq('diagnostic_id', user.id);
 
-            if (data) setPatients(data.map((d: any) => d.patient));
+            if (data) setPatients(data.map((d) => d.patient) as unknown as Patient[]);
             setLoading(false);
         };
         fetchPatients();

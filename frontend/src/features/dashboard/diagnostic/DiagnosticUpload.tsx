@@ -7,10 +7,17 @@ import {
 } from 'phosphor-react';
 //import { useTranslation } from 'react-i18next';
 
+interface SimplePatient {
+    id: string;
+    full_name: string;
+    phone?: string;
+    email?: string;
+}
+
 export default function DiagnosticUpload() {
     //const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-    const [patient, setPatient] = useState<any>(null);
+    const [patient, setPatient] = useState<SimplePatient | null>(null);
     const [reportTitle, setReportTitle] = useState('');
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
@@ -61,8 +68,9 @@ export default function DiagnosticUpload() {
             setReportTitle('');
             setSearchQuery('');
 
-        } catch (error: any) {
-            alert('Upload failed: ' + error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Unknown error';
+            alert('Upload failed: ' + message);
         } finally {
             setUploading(false);
         }

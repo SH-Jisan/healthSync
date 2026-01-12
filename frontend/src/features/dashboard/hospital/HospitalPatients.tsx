@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
 import { User, Plus, Trash } from 'phosphor-react';
@@ -21,7 +21,7 @@ export default function HospitalPatients() {
     const [showModal, setShowModal] = useState(false);
     const [searchEmail, setSearchEmail] = useState('');
 
-    const fetchPatients = async () => {
+    const fetchPatients = useCallback(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
@@ -32,11 +32,12 @@ export default function HospitalPatients() {
 
         if (data) setPatients(data as unknown as PatientRow[]);
         setLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchPatients();
-    }, []);
+    }, [fetchPatients]);
 
     const admitPatient = async () => {
         if (!searchEmail) return;

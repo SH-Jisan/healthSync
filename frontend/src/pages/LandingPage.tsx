@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import { ShieldCheck, Heartbeat, Drop, Brain } from 'phosphor-react';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
+import React from "react";
 
 export default function LandingPage() {
     const navigate = useNavigate();
@@ -182,7 +183,14 @@ export default function LandingPage() {
 }
 
 // Feature Card Component
-function FeatureCard({ icon, title, desc, bg }: any) {
+interface FeatureCardProps {
+    icon: React.ReactNode;
+    title: string;
+    desc: string;
+    bg: string;
+}
+
+function FeatureCard({ icon, title, desc, bg }: FeatureCardProps) {
     return (
         <div
             style={{

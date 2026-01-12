@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
@@ -25,7 +25,7 @@ export default function DoctorMyPatients() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [searchEmail, setSearchEmail] = useState('');
 
-    const fetchPatients = async () => {
+    const fetchPatients = useCallback(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
@@ -38,11 +38,12 @@ export default function DoctorMyPatients() {
             setPatients(data as unknown as DoctorPatientRow[]);
         }
         setLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchPatients();
-    }, []);
+    }, [fetchPatients]);
 
     const addNewPatient = async () => {
         if (!searchEmail) return;

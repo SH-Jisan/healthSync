@@ -169,13 +169,24 @@ export default function ProfilePage() {
 }
 
 // Helper Components for Cleaner JSX
-const Badge = ({ icon, text, color, bg }: any) => (
+interface BadgeProps {
+    icon: React.ReactNode;
+    text: string;
+    color: string;
+    bg: string;
+}
+const Badge = ({ icon, text, color, bg }: BadgeProps) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: bg, color: color, padding: '8px 12px', borderRadius: '12px', fontWeight: 'bold', fontSize: '0.9rem' }}>
         {icon} {text}
     </div>
 );
 
-const InfoRow = ({ icon, label, value }: any) => (
+interface InfoRowProps {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+}
+const InfoRow = ({ icon, label, value }: InfoRowProps) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '15px', background: 'white', borderRadius: '12px', border: '1px solid var(--border)' }}>
         <div style={{ color: 'var(--text-secondary)' }}>{icon}</div>
         <div>
@@ -185,7 +196,14 @@ const InfoRow = ({ icon, label, value }: any) => (
     </div>
 );
 
-const NavButton = ({ onClick, icon, label, color, bg }: any) => (
+interface NavButtonProps {
+    onClick: () => void;
+    icon: React.ReactNode;
+    label: string;
+    color: string;
+    bg: string;
+}
+const NavButton = ({ onClick, icon, label, color, bg }: NavButtonProps) => (
     <button onClick={onClick} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px', background: 'white', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', fontSize: '1rem', color: 'var(--text-primary)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <div style={{ padding: '8px', background: bg, borderRadius: '50%', color: color }}>{icon}</div>

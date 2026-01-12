@@ -6,8 +6,33 @@ import {
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
 
+interface Medicine {
+    name: string;
+    dosage?: string;
+    duration?: string;
+}
+
+interface MedicalEvent {
+    id: string;
+    event_type: string;
+    title: string;
+    event_date: string;
+    summary?: string;
+    uploader?: { full_name?: string };
+    vitals?: {
+        bp?: string;
+        hr?: string;
+        temp?: string;
+        weight?: string;
+    };
+    key_findings?: string[];
+    medicines?: Medicine[];
+    extracted_text?: string;
+    attachments?: string[];
+}
+
 interface EventDetailsProps {
-    event: any;
+    event: MedicalEvent;
     onClose: () => void;
 }
 
@@ -95,7 +120,7 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                     {['overview', 'medicines', 'analysis', 'file'].map((tab) => (
                         <button
                             key={tab}
-                            onClick={() => setActiveTab(tab as any)}
+                            onClick={() => setActiveTab(tab as 'overview' | 'medicines' | 'analysis' | 'file')}
                             style={{
                                 padding: '1rem 0', background: 'none', border: 'none', cursor: 'pointer',
                                 fontSize: '1rem', fontWeight: 600, textTransform: 'capitalize',
@@ -138,8 +163,8 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '15px' }}>
                                         {event.key_findings.map((tag: string, i: number) => (
                                             <span key={i} style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '6px 12px', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 500 }}>
-                          #{tag}
-                        </span>
+                                                #{tag}
+                                            </span>
                                         ))}
                                     </div>
                                 )}
@@ -154,20 +179,20 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                             {event.medicines && event.medicines.length > 0 ? (
                                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
-                                    <tr style={{ background: '#F1F5F9', textAlign: 'left' }}>
-                                        <th style={{ padding: '15px', color: '#475569' }}>Medicine Name</th>
-                                        <th style={{ padding: '15px', color: '#475569' }}>Dosage</th>
-                                        <th style={{ padding: '15px', color: '#475569' }}>Duration</th>
-                                    </tr>
+                                        <tr style={{ background: '#F1F5F9', textAlign: 'left' }}>
+                                            <th style={{ padding: '15px', color: '#475569' }}>Medicine Name</th>
+                                            <th style={{ padding: '15px', color: '#475569' }}>Dosage</th>
+                                            <th style={{ padding: '15px', color: '#475569' }}>Duration</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {event.medicines.map((med: any, idx: number) => (
-                                        <tr key={idx}>
-                                            <td style={tdStyle}><div style={{display: 'flex', alignItems: 'center', gap: '8px'}}><Pill color="var(--primary)" /> {med.name}</div></td>
-                                            <td style={tdStyle}>{med.dosage || '-'}</td>
-                                            <td style={tdStyle}>{med.duration || '-'}</td>
-                                        </tr>
-                                    ))}
+                                        {event.medicines.map((med, idx) => (
+                                            <tr key={idx}>
+                                                <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Pill color="var(--primary)" /> {med.name}</div></td>
+                                                <td style={tdStyle}>{med.dosage || '-'}</td>
+                                                <td style={tdStyle}>{med.duration || '-'}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             ) : (
@@ -241,7 +266,15 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
 }
 
 // Helper Components
-const VitalCard = ({ icon, label, value, unit, color, bg }: any) => (
+interface VitalCardProps {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+    unit: string;
+    color: string;
+    bg: string;
+}
+const VitalCard = ({ icon, label, value, unit, color, bg }: VitalCardProps) => (
     <div style={{ background: 'white', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
         <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: bg, color: color, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
             {icon}

@@ -46,7 +46,7 @@ export default function HealthPlanView() {
         }
     };
 
-    const renderContent = (content: any) => {
+    const renderContent = (content: unknown) => {
         if (!content) return null;
         if (typeof content === 'string') return <p>{content}</p>;
         if (Array.isArray(content)) {
