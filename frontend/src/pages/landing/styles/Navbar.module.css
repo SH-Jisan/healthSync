@@ -104,10 +104,21 @@
     /* গ্লো ইফেক্ট */
 }
 
+
+.logoText {
+    display: flex;
+    gap: 0px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    transition: opacity 0.5s ease 0.5s;
+}
+
 @media(max-width: 768px) {
     .navbar {
         padding: 0 15px;
-        height: 50px;
+        height: 60px;
+        /* Slightly taller for better touch targets */
     }
 
     .navItems {
@@ -115,19 +126,38 @@
     }
 
     .navActions {
-        gap: 10px;
+        gap: 8px;
     }
 
     .langToggle {
         font-size: 0.85rem;
+        padding: 5px;
+        /* Add padding for touch */
     }
 
     .loginBtn button {
-        padding: 5px 15px;
-        font-size: 0.85rem;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        border-width: 1.5px;
     }
 
-    .logo span {
-        font-size: 1.2rem !important;
+    .logoImage {
+        height: 28px;
+        width: 28px;
+        margin-right: 8px;
+    }
+
+    /* Target the class directly instead of generic span */
+    .logoText {
+        font-size: 1.1rem;
+        gap: 0;
+    }
+}
+
+@media(max-width: 380px) {
+
+    /* Extra small devices */
+    .logoText {
+        font-size: 1rem;
     }
 }

@@ -8,6 +8,7 @@ import {
 import styles from './SignupPage.module.css';
 import LanguageSwitcher from '../../components/common/LanguageSwitcher';
 
+
 export default function SignupPage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -66,11 +67,18 @@ export default function SignupPage() {
         <div className={styles.container}>
             {/* Left Panel: Medical Branding */}
             <div className={styles.brandPanel}>
+                <div className={styles.brandNav}>
+                    <Link to="/" className={styles.backBtn}>
+                        <ArrowLeft size={20} weight="bold" />
+                        <span>{t('common.back_home')}</span>
+                    </Link>
+                    <LanguageSwitcher />
+                </div>
                 <div className={styles.brandContent}>
                     <div className={styles.brandLogo}>
                         <svg width="60" height="60" viewBox="0 0 256 256" fill="white">
                             <path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM128,152a24,24,0,1,1,24-24A24,24,0,0,1,128,152Zm40-88H88a8,8,0,0,1,0-16h80a8,8,0,0,1,0,16Z" opacity="0.2"></path>
-                            <path d="M208,24H48A24,24,0,0,0,24,48V208a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V48A24,24,0,0,0,208,24Zm8,184a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8ZM88,56h80a8,8,0,0,1,0,16H88a8,8,0,0,1,0-16Zm40,48a24,24,0,1,0,24,24A24,24,0,0,0,128,104Zm0,32a8,8,0,1,1,8-8A8,8,0,0,1,128,136Zm40,32H88a8,8,0,0,1,0-16h80a8,8,0,0,1,0,16Z" fill="white"></path>
+                            <path d="M208,24H48A24,24,0,0,0,24,48V208a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V48A24,24,0,0,0,208,24Zm8,184a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8ZM88,56h80a8,8,0,0,1,0-16H88a8,8,0,0,1,0-16Zm40,48a24,24,0,1,0,24,24A24,24,0,0,0,128,104Zm0,32a8,8,0,1,1,8-8A8,8,0,0,1,128,136Zm40,32H88a8,8,0,0,1,0-16h80a8,8,0,0,1,0,16Z" fill="white"></path>
                         </svg>
                     </div>
                     <h1 className={styles.brandTitle}>{t('auth.join_healthsync')}</h1>
@@ -85,15 +93,6 @@ export default function SignupPage() {
 
             {/* Right Panel: Signup Form */}
             <div className={styles.formPanel}>
-                <Link to="/" className={styles.backBtn}>
-                    <ArrowLeft size={20} weight="bold" />
-                    <span>{t('common.back_home')}</span>
-                </Link>
-
-                <div style={{ position: 'absolute', top: '30px', right: '30px', zIndex: 10 }}>
-                    <LanguageSwitcher />
-                </div>
-
                 <div className={styles.formBox}>
                     <div className={styles.header}>
                         <h2 className={styles.title}>{t('auth.signup_title')}</h2>
@@ -176,6 +175,6 @@ export default function SignupPage() {
                     </p>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

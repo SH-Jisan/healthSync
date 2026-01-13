@@ -34,6 +34,14 @@ export default function LoginPage() {
         <div className={styles.container}>
             {/* Left Panel: Brand & Vision */}
             <div className={styles.brandPanel}>
+                <div className={styles.brandNav}>
+                    <Link to="/" className={styles.backBtn}>
+                        <ArrowLeft size={20} weight="bold" />
+                        <span>{t('common.back_home')}</span>
+                    </Link>
+                    <LanguageSwitcher />
+                </div>
+
                 <div className={styles.brandContent}>
                     <div className={styles.brandLogo}>
                         {/* HealthSync Pulse Icon */}
@@ -51,15 +59,6 @@ export default function LoginPage() {
 
             {/* Right Panel: Clinical Form */}
             <div className={styles.formPanel}>
-                <Link to="/" className={styles.backBtn}>
-                    <ArrowLeft size={20} weight="bold" />
-                    <span>{t('common.back_home')}</span>
-                </Link>
-
-                <div style={{ position: 'absolute', top: '30px', right: '30px', zIndex: 10 }}>
-                    <LanguageSwitcher />
-                </div>
-
                 <form onSubmit={handleLogin} className={styles.formBox}>
                     <div className={styles.header}>
                         <h2 className={styles.title}>{t('auth.welcome_back')}</h2>

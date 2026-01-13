@@ -33,16 +33,14 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
                 />
 
                 {/* [FIXED] Colored Text for Glass Background */}
-                <span style={{
-                    opacity: showLogo ? 1 : 0,
-                    transition: 'opacity 0.5s ease 0.5s',
-                    visibility: showLogo ? 'visible' : 'hidden',
-                    display: 'flex',
-                    gap: '0px',
-                    fontSize: '1.5rem',
-                    fontWeight: '800', /* এক্সট্রা বোল্ড */
-                    letterSpacing: '-0.5px'
-                }}>
+                {/* [FIXED] Colored Text for Glass Background */}
+                <span
+                    className={styles.logoText}
+                    style={{
+                        opacity: showLogo ? 1 : 0,
+                        visibility: showLogo ? 'visible' : 'hidden',
+                    }}
+                >
                     {/* Health: গাঢ় নীল */}
                     <span style={{ color: '#0056D2' }}>Health</span>
 

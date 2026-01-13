@@ -27,6 +27,61 @@
     /* Full height */
 }
 
+.brandNav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    /* Ensure full width */
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.brandNav button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(5px);
+    color: white !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brandNav button:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Force Icon Color to White */
+.brandNav button svg {
+    color: #FFFFFF !important;
+}
+
+.brandNav button svg * {
+    stroke: #FFFFFF !important;
+    fill: none !important;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+    color: #FFFFFF;
+    transform: translateX(-4px);
+}
+
 .brandPanel::before {
     content: "";
     position: absolute;
@@ -102,20 +157,7 @@
     /* For absolute positioning of Back button */
 }
 
-.backBtn {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-    z-index: 10;
-}
+
 
 .backBtn:hover {
     color: var(--primary);
