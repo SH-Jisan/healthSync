@@ -1,14 +1,21 @@
 // src/features/about/AboutPage.tsx
 import type { ReactNode } from 'react';
-import { Code, Database, Brain, MagnifyingGlass } from 'phosphor-react';
+import { Code, Database, Brain, MagnifyingGlass, ArrowLeft } from 'phosphor-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import styles from './AboutPage.module.css';
 
 export default function AboutPage() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     return (
         <div className={styles.container}>
+            {/* Back Button */}
+            <button onClick={() => navigate(-1)} className={styles.backBtn}>
+                <ArrowLeft size={20} weight="bold" />
+                <span>{t('common.back', 'Back')}</span>
+            </button>
 
             {/* Header */}
             <div className={styles.header}>

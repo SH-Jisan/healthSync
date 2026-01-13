@@ -17,7 +17,13 @@ import {
 import styles from './Sidebar.module.css';
 import LanguageSwitcher from '../common/LanguageSwitcher';
 
-export default function Sidebar({ onClose }: { onClose?: () => void }) {
+// Update Props to include isOpen for mobile control
+interface SidebarProps {
+    onClose?: () => void;
+    isOpen?: boolean;
+}
+
+export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -52,7 +58,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     ];
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
             {/* Header */}
             <div className={styles.header}>
                 <div className={styles.avatar}>
@@ -70,7 +76,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     <div
                         key={item.key}
                         className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''
-                        }`}
+                            }`}
                         onClick={() => {
                             navigate(item.path);
                             if (onClose) onClose();
@@ -81,8 +87,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     </div>
                 ))}
 
-                <div className={styles.divider} />
-
+                {/* Updates (Notifications) - Now part of main list */}
                 <NavLink
                     to="/notifications"
                     className={({ isActive }) =>
@@ -94,17 +99,19 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     <span>{t('menu.notifications')}</span>
                 </NavLink>
 
-                {/* 🌙 Dark Mode */}
-                <div className={styles.navItem} onClick={toggleTheme}>
-                    {isDark ? <Moon size={24} color="#F59E0B" /> : <Sun size={24} />}
-                    <span>{isDark ? t('common.dark_mode') : t('common.light_mode')}</span>
+                <div className={styles.divider} />
+
+                {/* Settings Group (Theme + Language) */}
+                <div className={styles.settingsGroup}>
+                    {/* 🌙 Dark Mode */}
+                    <div className={styles.navItem} onClick={toggleTheme} style={{ justifyContent: 'center' }}>
+                        {isDark ? <Moon size={24} color="#F59E0B" /> : <Sun size={24} />}
+                    </div>
+
+                    {/* 🌐 Language Switcher */}
+                    <LanguageSwitcher style={{ width: '100%' }} />
                 </div>
             </nav>
-
-            {/* 🌐 Language Switcher */}
-            <div className={styles.languageWrapper}>
-                <LanguageSwitcher style={{ width: '100%' }} />
-            </div>
 
             {/* Logout */}
             <div className={styles.footer}>

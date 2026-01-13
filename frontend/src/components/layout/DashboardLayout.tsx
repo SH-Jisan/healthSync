@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { List } from 'phosphor-react';
 import Sidebar from './Sidebar';
-import sidebarStyles from './Sidebar.module.css'; // সাইডবারের স্টাইল (overlay, sidebar animation)
 import layoutStyles from './DashboardLayout.module.css'; // লেআউটের নতুন স্টাইল
 import { useTranslation } from 'react-i18next';
 
@@ -15,15 +14,16 @@ export default function DashboardLayout() {
             {/* Mobile Overlay */}
             {isSidebarOpen && (
                 <div
-                    className={`${sidebarStyles.overlay} ${sidebarStyles.show}`}
+                    className={`${layoutStyles.overlay} ${layoutStyles.show}`}
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
 
-            {/* Sidebar Container */}
-            <div className={`${sidebarStyles.sidebar} ${isSidebarOpen ? sidebarStyles.open : ''}`}>
-                <Sidebar onClose={() => setSidebarOpen(false)} />
-            </div>
+            {/* Sidebar Component (Directly Controlled) */}
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+            />
 
             {/* Main Content */}
             <main className={layoutStyles.mainContent}>

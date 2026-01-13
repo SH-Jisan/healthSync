@@ -52,3 +52,16 @@
         display: none !important;
     }
 }
+
+/* Mobile Overlay - Moved from Sidebar */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    display: none;
+}
+
+.overlay.show {
+    display: block;
+}
