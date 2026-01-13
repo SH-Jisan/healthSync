@@ -120,6 +120,7 @@
 }
 
 .navItem {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -127,31 +128,63 @@
     border-radius: 12px;
     color: var(--text-secondary);
     font-weight: 500;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s ease;
     text-decoration: none;
     cursor: pointer;
     border: 1px solid transparent;
+    overflow: hidden;
+    z-index: 1;
+    /* Keep content above pill */
+}
+
+.navContent {
+    position: relative;
+    z-index: 2;
+    /* Text & Icon above pill */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.navItem span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .navItem:hover {
-    background-color: rgba(var(--primary-hsl), 0.05);
     color: var(--primary);
-    transform: translateX(4px);
 }
 
-.active {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+.activeItem {
     color: var(--primary) !important;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(255, 255, 255, 1);
-    position: relative;
-    overflow: hidden;
+    background: transparent !important;
+    /* Let motion div handle bg */
+    border: none;
+    box-shadow: none;
 }
 
-.active::before {
+.activeItem svg {
+    color: var(--primary) !important;
+}
+
+/* The Framer Motion Pill */
+.activePill {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 1);
+    z-index: 0;
+    /* Behind text */
+}
+
+.activePill::before {
     content: "";
     position: absolute;
     left: 0;
@@ -159,16 +192,7 @@
     bottom: 0;
     width: 4px;
     background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-}
-
-.active svg {
-    color: var(--primary) !important;
-    /* Removed force fill to respect icon structure */
-}
-
-.active:hover {
-    transform: none;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 4px 0 0 4px;
 }
 
 .divider {

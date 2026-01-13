@@ -15,6 +15,7 @@ import {
     SquaresFour,
     Prescription // Import Prescription icon
 } from 'phosphor-react';
+import { motion } from 'framer-motion';
 import styles from './Sidebar.module.css';
 import LanguageSwitcher from '../common/LanguageSwitcher';
 
@@ -81,31 +82,58 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
 
             {/* Navigation */}
             <nav className={styles.nav}>
-                {menuItems.map((item) => (
-                    <div
-                        key={item.key}
-                        className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''
-                            }`}
-                        onClick={() => {
-                            navigate(item.path);
-                            if (onClose) onClose();
-                        }}
-                    >
-                        {item.icon}
-                        <span>{t(`menu.${item.key}`)}</span>
-                    </div>
-                ))}
+                {menuItems.map((item) => {
+                    const isActive = item.path === '/dashboard'
+                        ? location.pathname === item.path
+                        : location.pathname.startsWith(item.path);
 
-                {/* Updates (Notifications) - Now part of main list */}
+                    return (
+                        <div
+                            key={item.key}
+                            className={`${styles.navItem} ${isActive ? styles.activeItem : ''}`}
+                            onClick={() => {
+                                navigate(item.path);
+                                if (onClose) onClose();
+                            }}
+                        >
+                            {isActive && (
+                                <motion.div
+                                    layoutId="sidebar-active"
+                                    className={styles.activePill}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                            <span className={styles.navContent}>
+                                {item.icon}
+                                <span>{t(`menu.${item.key}`)}</span>
+                            </span>
+                        </div>
+                    );
+                })}
+
+                {/* Updates (Notifications) */}
                 <NavLink
                     to="/notifications"
                     className={({ isActive }) =>
-                        `${styles.navItem} ${isActive ? styles.active : ''}`
+                        `${styles.navItem} ${isActive ? styles.activeItem : ''}`
                     }
                     onClick={onClose}
                 >
-                    <Bell size={22} weight="bold" />
-                    <span>{t('menu.notifications')}</span>
+                    {({ isActive }) => (
+                        <>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="sidebar-active"
+                                    className={styles.activePill}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                            <span className={styles.navContent}>
+                                <Bell size={22} weight="bold" />
+                                <span>{t('menu.notifications')}</span>
+                            </span>
+                        </>
+                    )}
                 </NavLink>
 
                 <div className={styles.divider} />
