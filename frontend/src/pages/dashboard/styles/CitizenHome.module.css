@@ -62,6 +62,16 @@
     font-weight: 700;
 }
 
+.tabContent {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
 /* The sliding background pill */
 .activePill {
     position: absolute;
@@ -143,22 +153,43 @@
 @media (max-width: 768px) {
     .tabs {
         width: 100%;
-        overflow-x: auto;
-        border-radius: 16px;
+        border-radius: 12px;
         justify-content: space-between;
+        gap: 2px;
     }
 
     .tabBtn {
         flex: 1;
         justify-content: center;
-        white-space: nowrap;
-        padding: 12px 15px;
-        /* Reduce horizontal padding */
+        padding: 8px 4px;
+        border-radius: 12px;
+        min-width: 0;
+        /* Allow flex item to shrink */
+    }
+
+    .tabContent {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.75rem;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .activePill {
+        border-radius: 10px;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+    }
+
+    .tabBtn svg {
+        width: 18px;
+        height: 18px;
     }
 
     .addReportBtn {
         bottom: 90px;
-        /* Account for potential bottom nav on mobile if exists, or just spacing */
         right: 20px;
         padding: 12px 20px;
     }

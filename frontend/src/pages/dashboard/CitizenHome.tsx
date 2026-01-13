@@ -43,7 +43,7 @@ export default function CitizenHome() {
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 />
                             )}
-                            <span style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className={styles.tabContent}>
                                 <tab.Icon size={20} weight={activeTab === tab.id ? 'fill' : 'regular'} />
                                 {tab.label}
                             </span>
