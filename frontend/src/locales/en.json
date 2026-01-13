@@ -2,6 +2,7 @@
   "translation": {
     "common": {
       "loading": "Loading...",
+      "welcome": "Welcome",
       "processing": "Processing...",
       "submit": "Submit",
       "cancel": "Cancel",

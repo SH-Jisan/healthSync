@@ -2,6 +2,7 @@
   "translation": {
     "common": {
       "loading": "লোড হচ্ছে...",
+      "welcome": "স্বাগতম",
       "processing": "প্রসেসিং...",
       "submit": "জমা দিন",
       "cancel": "বাতিল",

@@ -60,13 +60,17 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
     return (
         <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
             {/* Header */}
+            {/* Header */}
             <div className={styles.header}>
-                <div className={styles.avatar}>
-                    {user?.user_metadata?.full_name?.[0]?.toUpperCase() || 'U'}
-                </div>
-                <div className={styles.userInfo}>
-                    <h3>{user?.user_metadata?.full_name || 'User'}</h3>
-                    <p>{user?.email}</p>
+                <span className={styles.welcomeLabel}>{t('common.welcome')}</span>
+                <div className={styles.userCard}>
+                    <div className={styles.avatar}>
+                        {user?.user_metadata?.full_name?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <div className={styles.userInfo}>
+                        <h3>{user?.user_metadata?.full_name || 'User'}</h3>
+                        <p>{user?.email}</p>
+                    </div>
                 </div>
             </div>
 
