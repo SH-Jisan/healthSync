@@ -23,10 +23,10 @@ const getTargetPosition = (animate: boolean) => {
     if (!animate) return {};
     const isMobile = window.innerWidth < 768;
     return {
-        top: isMobile ? '7px' : '15px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন
+        top: isMobile ? '12px' : '15px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন (Mobile: Centered)
         left: isMobile ? '15px' : '5%',      // Navbar এর প্যাডিং অনুযায়ী
         x: '0%',
-        y: isMobile ? '-10%' : '-15%',
+        y: isMobile ? '0%' : '-15%',         // Mobile: No vertical shift needed
         height: isMobile ? '35px' : '60px',  // Navbar এর লোগো সাইজ
     };
 };

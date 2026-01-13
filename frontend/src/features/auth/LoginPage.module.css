@@ -333,6 +333,11 @@
         height: auto;
     }
 
+    .brandNav {
+        padding: 15px 20px;
+        /* Reduce padding on mobile */
+    }
+
     .brandLogo {
         width: 60px;
         height: 60px;
