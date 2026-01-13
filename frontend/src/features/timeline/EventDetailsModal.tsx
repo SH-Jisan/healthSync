@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
-    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle
+    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle, MagnifyingGlass
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
@@ -18,10 +19,24 @@ export default React.forwardRef(function EventDetailsModal(
     { event, onClose }: EventDetailsProps,
     ref: React.Ref<HTMLDivElement>
 ) {
+    const { t, i18n } = useTranslation();
     const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file' | 'prescription'>(
         event.event_type === 'PRESCRIPTION' ? 'prescription' : 'overview'
     );
     const printRef = useRef<HTMLDivElement>(null);
+
+    const isBangla = i18n.language === 'bn';
+    const summary = isBangla
+        ? (event.ai_details?.summary_bn || event.summary)
+        : (event.ai_details?.summary_en || event.summary);
+
+    const detailedAnalysis = isBangla
+        ? event.ai_details?.detailed_analysis_bn
+        : event.ai_details?.detailed_analysis_en;
+
+    const keyFindings = isBangla
+        ? (event.ai_details?.key_findings_bn || event.key_findings)
+        : (event.ai_details?.key_findings_en || event.key_findings);
 
     const getImageUrl = (path: string) => {
         if (!path) return null;
@@ -170,15 +185,32 @@ export default React.forwardRef(function EventDetailsModal(
 
                             <div className={styles.summarySection}>
                                 <h3 className={styles.sectionTitle}>
-                                    <FileText size={24} color="var(--primary)" /> Medical Summary
+                                    <FileText size={24} color="var(--primary)" />
+                                    {isBangla ? 'সহজ সারাংশ (AI)' : 'Simple Summary (AI)'}
                                 </h3>
-                                <p className={styles.summaryText}>
-                                    {event.summary || 'No summary available provided by the doctor or AI.'}
-                                </p>
 
-                                {event.key_findings && event.key_findings.length > 0 && (
+                                <div className={styles.aiSummaryBox}>
+                                    <div className={styles.aiBadge}>
+                                        ✨ Child-Friendly Explanation
+                                    </div>
+                                    <p className={styles.summaryText}>
+                                        {summary || (isBangla ? 'কোন সারাংশ পাওয়া যায়নি।' : 'No summary available provided by the doctor or AI.')}
+                                    </p>
+                                </div>
+
+                                {detailedAnalysis && (
+                                    <div className={styles.detailedAnalysis}>
+                                        <h4 style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <MagnifyingGlass size={20} />
+                                            {isBangla ? 'বিস্তারিত বিশ্লেষণ' : 'Detailed Analysis'}
+                                        </h4>
+                                        <p className={styles.detailedText}>{detailedAnalysis}</p>
+                                    </div>
+                                )}
+
+                                {keyFindings && keyFindings.length > 0 && (
                                     <div className={styles.findingTags}>
-                                        {event.key_findings.map((tag: string, i: number) => (
+                                        {keyFindings.map((tag: string, i: number) => (
                                             <span key={i} className={styles.tag}>
                                                 #{tag}
                                             </span>

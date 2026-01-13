@@ -47,13 +47,14 @@ serve(async (req) => {
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" })
 
-    // 3. Smart Prompt (Prescription Safety Check সহ)
+    // 3. Smart Prompt (Prescription Safety Check with Bilingual Analysis)
     const prompt = `
     Role: Expert Medical AI.
     Task:
     1. EXTRACT every single word (OCR).
     2. Identify Document Type: REPORT or PRESCRIPTION.
-    3. Analyze findings. If Prescription, check for common contraindications.
+    3. Analyze findings and provide a summary that is accurate yet easy to understand (Child-friendly).
+    4. Provide results in BOTH English and Bengali (Bangla).
 
     Output JSON format (Strictly):
     {
@@ -61,10 +62,13 @@ serve(async (req) => {
       "event_type": "REPORT" or "PRESCRIPTION",
       "event_date": "YYYY-MM-DD",
       "severity": "HIGH/MEDIUM/LOW",
-      "summary": "Concise summary in English.",
-      "summary_bn": "সারাংশ (Summary in Bengali).",
+      "summary": "Concise summary in English. Keep it simple and easy to understand.",
+      "summary_bn": "সারাংশ (Bangla). সহজ বাংলায় এবং সংক্ষেপে লিখুন যাতে সবাই বুঝতে পারে।",
+      "detailed_analysis_en": "Detailed analysis in English. Explain the medical terms in simple words.",
+      "detailed_analysis_bn": "বিস্তারিত বিশ্লেষণ (Bangla). মেডিকেল টার্মগুলো সহজভাবে বুঝিয়ে লিখুন।",
       "extracted_text": "Full text content...",
       "key_findings": ["Hb: 10.5 (Low)", "Platelets: Normal"],
+      "key_findings_bn": ["হিমোগ্লোবিন: ১০.৫ (কম)", "প্লাটলেট: স্বাভাবিক"],
       "medicine_safety_check": "Safe/Caution/Danger (Only for prescriptions)"
     }
     `

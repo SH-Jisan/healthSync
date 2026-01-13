@@ -31,6 +31,15 @@ export interface MedicalEvent {
         phone: string;
     };
     created_at: string;
+    ai_details?: {
+        summary_en?: string;
+        summary_bn?: string;
+        detailed_analysis_en?: string;
+        detailed_analysis_bn?: string;
+        key_findings_en?: string[];
+        key_findings_bn?: string[];
+        [key: string]: any;
+    };
 }
 export interface BloodRequest {
     id: string;
