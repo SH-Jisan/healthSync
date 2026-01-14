@@ -31,7 +31,7 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 1rem;
 }
 
@@ -45,6 +45,8 @@
     text-align: left;
     position: relative;
     overflow: hidden;
+    background: var(--surface);
+    transition: all 0.3s var(--ease-spring);
 }
 
 .iconWrapper {
@@ -93,11 +95,45 @@
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
     .title {
         font-size: 2.25rem;
     }
 
+    .subtitle {
+        font-size: 1.1rem;
+        margin-top: 1rem;
+    }
+
     .grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .card {
+        padding: 1.25rem;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .iconWrapper {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+        border-radius: 14px;
+    }
+
+    .cardTitle {
+        font-size: 1.1rem;
+    }
+
+    .actionArrow {
+        display: none;
     }
 }

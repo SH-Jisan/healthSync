@@ -1,5 +1,5 @@
 .container {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
     display: flex;
@@ -275,6 +275,154 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
     margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
+    .mainCard {
+        padding: 2rem;
+    }
+
+    .aiSection {
+        padding: 1rem;
+    }
+
+    .aiHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .divider {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem;
+        max-width: 100%;
+        display: block;
+    }
+
+    .mainCard,
+    .mainCard:hover,
+    .mainCard:focus-within,
+    .mainCard:active {
+        padding: 1rem 0;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        border: none !important;
+        min-height: auto;
+        backdrop-filter: none !important;
+    }
+
+    .header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .iconCircle {
+        margin: 0 auto 1rem;
+        width: 56px;
+        height: 56px;
+        background: #FEF2F2;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+    }
+
+    .title {
+        font-size: 1.75rem;
+        letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    /* AI Section Premium */
+    .aiSection {
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, var(--primary) 0%, #0F766E 100%);
+        border-radius: 1.25rem;
+        box-shadow: 0 8px 20px -5px rgba(16, 185, 129, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .aiHeader {
+        margin-bottom: 1rem;
+    }
+
+    .aiInput {
+        font-size: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        color: white;
+    }
+
+    .aiInput:focus {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Form Fields Premium */
+    .inputGroup {
+        margin-bottom: 1.5rem;
+        gap: 0.5rem;
+    }
+
+    .label {
+        font-size: 0.95rem;
+        margin-left: 4px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .input,
+    .select,
+    .textarea {
+        padding: 16px;
+        font-size: 1.05rem;
+        background: #E5E7EB;
+        border: 1px solid #D1D5DB;
+        border-radius: 14px;
+        color: #111827;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+        background: white;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .divider {
+        margin: 2rem 0;
+        font-size: 0.85rem;
+        opacity: 0.6;
+    }
+
+    .submitBtn {
+        height: 60px;
+        font-size: 1.15rem;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        box-shadow: 0 8px 20px -6px var(--primary);
+        margin-top: 2rem;
+        letter-spacing: 0.5px;
+    }
 }

@@ -202,7 +202,44 @@
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+
     .searchForm {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .searchBtn {
+        height: 48px;
+    }
+}
+
+@media (max-width: 640px) {
+    .searchCard {
+        padding: 1.25rem;
+    }
+
+    .title {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .resultsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .donorCard {
+        padding: 1.25rem;
+    }
+
+    .donorHeader {
+        margin-bottom: 1rem;
     }
 }
