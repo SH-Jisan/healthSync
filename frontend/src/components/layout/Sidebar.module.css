@@ -110,6 +110,7 @@
     font-weight: 400;
 }
 
+
 .nav {
     padding: 1.5rem 1rem;
     flex: 1;
@@ -117,6 +118,25 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-height: 0;
+    /* Crucial for scrolling in flex container */
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Custom scrollbar for Webkit */
+.nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
 }
 
 .navItem {
@@ -134,17 +154,19 @@
     border: 1px solid transparent;
     overflow: hidden;
     z-index: 1;
-    /* Keep content above pill */
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 .navContent {
     position: relative;
     z-index: 2;
-    /* Text & Icon above pill */
     display: flex;
     align-items: center;
     gap: 12px;
     width: 100%;
+    min-width: 0;
+    /* Enable truncation in flex child */
 }
 
 .navItem span {

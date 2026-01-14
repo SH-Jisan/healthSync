@@ -123,9 +123,7 @@ export default function ProfilePage() {
             <div className={styles.sectionWrapper}>
                 <h3 className={styles.sectionTitle}>{t('profile.activity')}</h3>
                 <div className={styles.infoStack}>
-                    {profile?.role === 'CITIZEN' && (
-                        <NavButton onClick={() => navigate('/appointments')} icon={<CalendarCheck size={20} />} label={t('profile.my_appointments')} color="#3B82F6" bg="#EFF6FF" />
-                    )}
+                    {/* Removed My Appointments link as it is now in Sidebar */}
                     <NavButton onClick={() => navigate('/blood/my-requests')} icon={<Drop size={20} />} label={t('profile.my_blood_requests')} color="#EF4444" bg="#FEF2F2" />
                     <NavButton onClick={() => navigate('/blood/register')} icon={<User size={20} />} label={t('profile.donor_settings')} color="#10B981" bg="#F0FDF4" />
                 </div>

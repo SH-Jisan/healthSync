@@ -13,7 +13,9 @@ import {
     SignOut,
     FirstAid,
     SquaresFour,
-    Prescription // Import Prescription icon
+    Prescription,
+    CalendarCheck,
+    Clock
 } from 'phosphor-react';
 import { motion } from 'framer-motion';
 import styles from './Sidebar.module.css';
@@ -53,6 +55,10 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
 
     const menuItems = [
         { key: 'dashboard', icon: <SquaresFour size={24} />, path: '/dashboard' },
+        ...((user?.user_metadata?.role === 'CITIZEN') ? [
+            { key: 'appointments', icon: <CalendarCheck size={24} />, path: '/appointments' },
+            // Removed History link as requested
+        ] : []),
         ...((user?.user_metadata?.role === 'CITIZEN' || user?.user_metadata?.role === 'DOCTOR') ? [{
             key: 'prescriptions',
             icon: <Prescription size={24} />,

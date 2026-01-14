@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/shared/lib/supabaseClient';
 import {
     Calendar, Clock, MapPin, CheckCircle, XCircle, Hourglass,
-    Prescription as PrescriptionIcon, TestTube, Buildings, FileText
+    Prescription as PrescriptionIcon, TestTube, Buildings, FileText, CalendarBlank
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import styles from './PatientAppointments.module.css';
@@ -19,12 +21,7 @@ interface Appointment {
     hospital?: { full_name: string; address: string };
 }
 
-interface Prescription {
-    id: string;
-    event_date: string;
-    title: string;
-    uploader: { full_name: string; specialty: string };
-}
+
 
 interface Diagnostic {
     id: string;
@@ -35,11 +32,25 @@ interface Diagnostic {
 
 export default function PatientAppointments() {
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState<'appointments' | 'prescriptions' | 'diagnostic' | 'hospitals'>('appointments');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const initialTab = (searchParams.get('tab') as 'appointments' | 'diagnostic' | 'hospitals') || 'appointments';
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    // Sync state with URL when tab is clicked
+    const handleTabChange = (id: string) => {
+        setActiveTab(id as any);
+        setSearchParams({ tab: id });
+    };
+
+    useEffect(() => {
+        const tabFromUrl = searchParams.get('tab');
+        if (tabFromUrl && tabFromUrl !== activeTab) {
+            setActiveTab(tabFromUrl as any);
+        }
+    }, [searchParams]);
     const [loading, setLoading] = useState(true);
 
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
 
     const fetchData = useCallback(async () => {
@@ -54,15 +65,6 @@ export default function PatientAppointments() {
                 .eq('patient_id', user.id)
                 .order('appointment_date', { ascending: false });
             if (data) setAppointments(data as unknown as Appointment[]);
-        }
-        else if (activeTab === 'prescriptions') {
-            const { data } = await supabase
-                .from('medical_events')
-                .select('*, uploader:uploader_id(full_name, specialty)')
-                .eq('patient_id', user.id)
-                .eq('event_type', 'PRESCRIPTION')
-                .order('event_date', { ascending: false });
-            if (data) setPrescriptions(data as unknown as Prescription[]);
         }
         else if (activeTab === 'diagnostic') {
             const { data } = await supabase
@@ -94,21 +96,32 @@ export default function PatientAppointments() {
             <h2 className={styles.pageTitle}>{t('appointments.title')}</h2>
 
             {/* Tabs */}
+            {/* Tabs */}
             <div className={styles.tabsContainer}>
-                {[
-                    { id: 'appointments', label: t('appointments.tabs.appointments'), icon: <Calendar /> },
-                    { id: 'prescriptions', label: t('appointments.tabs.prescriptions'), icon: <PrescriptionIcon /> },
-                    { id: 'diagnostic', label: t('appointments.tabs.diagnostic'), icon: <TestTube /> },
-                    { id: 'hospitals', label: t('appointments.tabs.hospitals'), icon: <Buildings /> },
-                ].map(tab => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-                    >
-                        {tab.icon} {tab.label}
-                    </button>
-                ))}
+                <div className={styles.tabs}>
+                    {[
+                        { id: 'appointments', label: t('appointments.tabs.appointments'), icon: <Calendar size={20} /> },
+                        { id: 'diagnostic', label: t('appointments.tabs.diagnostic'), icon: <TestTube size={20} /> },
+                        // { id: 'hospitals', label: t('appointments.tabs.hospitals'), icon: <Buildings size={20} /> }, // Hidden for now as it was empty
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => handleTabChange(tab.id)}
+                            className={`${styles.tabBtn} ${activeTab === tab.id ? styles.active : ''}`}
+                        >
+                            {activeTab === tab.id && (
+                                <motion.div
+                                    layoutId="activePill"
+                                    className={styles.activePill}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                            <span className={styles.tabContent}>
+                                {tab.icon} {tab.label}
+                            </span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {loading ? (
@@ -117,93 +130,128 @@ export default function PatientAppointments() {
                 <>
                     {/* Appointments Tab */}
                     {activeTab === 'appointments' && (
-                        <div className={styles.gridList}>
-                            {appointments.length === 0 ? <EmptyState text={t('appointments.no_appointments')} /> : appointments.map(app => {
-                                const { className } = getStatusInfo(app.status);
-                                const dateObj = new Date(app.appointment_date);
-                                return (
-                                    <div key={app.id} className={styles.card}>
-                                        <div className={styles.cardContent}>
-                                            {/* Date Block */}
-                                            <div className={styles.dateBlock}>
-                                                <div className={styles.dateMonth}>{format(dateObj, 'MMM').toUpperCase()}</div>
-                                                <div className={styles.dateDay}>{format(dateObj, 'dd')}</div>
-                                            </div>
-
-                                            <div className={styles.infoSection}>
-                                                <div className={styles.mainTitle}>Dr. {app.doctor.full_name}</div>
-                                                <div className={styles.subTitle}>{app.doctor.specialty}</div>
-
-                                                <div className={styles.metaInfo}>
-                                                    <span className={styles.metaItem}>
-                                                        <Clock size={16} /> {format(dateObj, 'hh:mm a')}
-                                                    </span>
-                                                    {app.hospital && (
-                                                        <span className={styles.metaItem}>
-                                                            <MapPin size={16} /> {app.hospital.full_name}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <span className={`${styles.statusBadge} ${className}`}>
-                                                {app.status}
-                                            </span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {/* Prescriptions Tab */}
-                    {activeTab === 'prescriptions' && (
-                        <div className={styles.gridList}>
-                            {prescriptions.length === 0 ? <EmptyState text={t('appointments.no_prescriptions')} /> : prescriptions.map(rx => (
-                                <div key={rx.id} className={styles.card}>
-                                    <div className={`${styles.cardContent} ${styles.cardContentCenter}`}>
-                                        <div className={`${styles.iconWrapper} ${styles.prescriptionIcon}`}>
-                                            <FileText size={24} />
-                                        </div>
-                                        <div>
-                                            <div className={styles.mainTitle}>{rx.uploader.full_name}</div>
-                                            <div className={styles.subTitle}>
-                                                {t('appointments.date_label')} {format(new Date(rx.event_date), 'MMM dd, yyyy')}
-                                            </div>
-                                            <div style={{ marginTop: '4px', fontWeight: 500 }}>
-                                                {t('appointments.rx_label')} {rx.title}
-                                            </div>
-                                        </div>
-                                    </div>
+                        <motion.div
+                            className={styles.gridList}
+                            initial="hidden"
+                            animate="visible"
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: {
+                                    opacity: 1,
+                                    transition: { staggerChildren: 0.1 }
+                                }
+                            }}
+                        >
+                            {appointments.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    <Calendar className={styles.emptyIcon} size={48} />
+                                    <p>{t('appointments.no_appointments')}</p>
                                 </div>
-                            ))}
-                        </div>
+                            ) : (
+                                appointments.map(app => {
+                                    const { className } = getStatusInfo(app.status);
+                                    const dateObj = new Date(app.appointment_date);
+                                    return (
+                                        <motion.div
+                                            key={app.id}
+                                            className={styles.card}
+                                            variants={{
+                                                hidden: { opacity: 0, y: 20 },
+                                                visible: { opacity: 1, y: 0 }
+                                            }}
+                                        >
+                                            <div className={styles.cardContent}>
+                                                <div className={styles.dateBlock}>
+                                                    <span className={styles.dateMonth}>{format(dateObj, 'MMM')}</span>
+                                                    <span className={styles.dateDay}>{format(dateObj, 'dd')}</span>
+                                                </div>
+
+                                                <div className={styles.infoSection}>
+                                                    <div className={styles.mainTitle}>{app.doctor.full_name}</div>
+                                                    <div className={styles.subTitle}>{t(`specialties.${app.doctor.specialty}`)}</div>
+
+                                                    <div className={styles.metaInfo}>
+                                                        {app.hospital && (
+                                                            <div className={styles.metaItem}>
+                                                                <MapPin size={16} weight="fill" />
+                                                                {app.hospital.full_name}
+                                                            </div>
+                                                        )}
+                                                        <div className={styles.metaItem}>
+                                                            <Clock size={16} weight="fill" />
+                                                            {format(dateObj, 'h:mm a')}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <span className={`${styles.statusBadge} ${className}`}>
+                                                    {t(`appointments.status.${app.status.toLowerCase()}`)}
+                                                </span>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })
+                            )}
+                        </motion.div>
                     )}
+
+
 
                     {/* Diagnostic Tab */}
                     {activeTab === 'diagnostic' && (
-                        <div className={styles.gridList}>
-                            {diagnostics.length === 0 ? <EmptyState text={t('appointments.no_diagnostics')} /> : diagnostics.map(diag => (
-                                <div key={diag.id} className={styles.card}>
-                                    <div className={`${styles.cardContent} ${styles.cardContentCenter}`}>
-                                        <div className={`${styles.iconWrapper} ${styles.diagnosticIcon}`}>
-                                            <TestTube size={24} />
-                                        </div>
-                                        <div>
-                                            <div className={styles.mainTitle}>{diag.provider.full_name}</div>
-                                            <div className={styles.subTitle}>
-                                                {t('appointments.date_label')} {format(new Date(diag.created_at), 'MMM dd, yyyy')}
+                        <motion.div
+                            className={styles.gridList}
+                            initial="hidden"
+                            animate="visible"
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: {
+                                    opacity: 1,
+                                    transition: { staggerChildren: 0.1 }
+                                }
+                            }}
+                        >
+                            {diagnostics.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    <TestTube className={styles.emptyIcon} size={48} />
+                                    <p>{t('appointments.no_diagnostics')}</p>
+                                </div>
+                            ) : (
+                                diagnostics.map(test => (
+                                    <motion.div
+                                        key={test.id}
+                                        className={styles.card}
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            visible: { opacity: 1, y: 0 }
+                                        }}
+                                    >
+                                        <div className={`${styles.cardContent} ${styles.cardContentCenter}`}>
+                                            <div className={`${styles.iconWrapper} ${styles.diagnosticIcon}`}>
+                                                <TestTube size={28} weight="duotone" />
                                             </div>
-                                            <div style={{ marginTop: '4px' }}>{t('appointments.status_label')}
-                                                <span className={`${styles.statusText} ${diag.report_status === 'COMPLETED' ? styles.statusCompleted : styles.statusPendingText}`}>
-                                                    {diag.report_status}
+                                            <div className={styles.infoSection}>
+                                                <div className={styles.mainTitle}>{test.provider.full_name}</div>
+                                                <div className={styles.subTitle}>
+                                                    {t('appointments.diagnostic_report')}
+                                                </div>
+                                                <div className={styles.metaInfo}>
+                                                    <div className={styles.metaItem}>
+                                                        <CalendarBlank size={16} weight="fill" />
+                                                        {format(new Date(test.created_at), 'MMM dd, yyyy')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className={`${styles.statusText} ${test.report_status === 'COMPLETED' ? styles.statusCompleted : styles.statusPendingText}`}>
+                                                    {test.report_status}
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                    </motion.div>
+                                ))
+                            )}
+                        </motion.div>
                     )}
 
                     {/* Hospitals Tab */}
