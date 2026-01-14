@@ -10,7 +10,7 @@ import PublicRoute from './PublicRoute';
 import DashboardLayout from '../components/layout/DashboardLayout';
 
 // Pages
-import LandingPage from '../pages/landing/LandingPage';
+import LandingPage from '../pages/CurrentLanding/LandingPage';
 import LoginPage from '../features/auth/LoginPage';
 import SignupPage from '../features/auth/SignupPage';
 import AboutPage from '../features/about/AboutPage';
