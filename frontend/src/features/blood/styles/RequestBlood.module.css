@@ -87,7 +87,7 @@
     right: 0;
     width: 150px;
     height: 150px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
     border-radius: 50%;
     transform: translate(30%, -30%);
 }
@@ -145,7 +145,8 @@
     border: none;
     color: white;
     padding: 1rem;
-    padding-bottom: 3.5rem; /* Space for button */
+    padding-bottom: 3.5rem;
+    /* Space for button */
     font-family: inherit;
     resize: none;
     outline: none;
@@ -197,8 +198,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Divider */
@@ -292,7 +298,7 @@
 
 .urgencyBtn:hover:not(.active) {
     color: var(--text-primary);
-    background: rgba(0,0,0,0.03);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .normalActive {
@@ -367,357 +373,16 @@
 
     /* Keep AI section styled nicely but remove extra margins if needed */
     .aiSection {
-        border-radius: var(--radius-xl);
-    }
-
-    /* Manual form card effect for mobile */
-    .formContent {
-        background: var(--surface);
-        margin: 0 -1.5rem; /* Bleed to edges */
-        padding: 2rem 1.5rem 3rem 1.5rem;
-        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-    }
-}
-
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--background);
-    color: var(--text-primary);
-    line-height: 1.5;
-}
-
-/* --------------------------------------
-   DESKTOP DEFAULT STYLES
-   -------------------------------------- */
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-}
-
-.mainCard {
-    width: 100%;
-    background: var(--surface);
-    padding: 2.5rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.iconCircle {
-    width: 64px;
-    height: 64px;
-    background: #FEF2F2;
-    color: #EF4444;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-}
-
-.subtitle {
-    color: var(--text-secondary);
-    font-size: 1rem;
-}
-
-/* AI Section */
-.aiSection {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-md);
-}
-
-.aiHeader {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-}
-
-.aiBadge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    backdrop-filter: blur(4px);
-}
-
-.aiHelper {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.aiInputWrapper {
-    position: relative;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-lg);
-    padding: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.2s;
-}
-
-.aiInputWrapper:focus-within {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.aiInput {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 0.75rem;
-    padding-bottom: 3rem;
-    font-family: inherit;
-    resize: none;
-    outline: none;
-    font-size: 0.95rem;
-}
-
-.aiInput::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.aiButton {
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
-    background: white;
-    color: var(--primary);
-    border: none;
-    padding: 6px 14px;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.aiButton:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Divider */
-.divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2rem;
-    position: relative;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-    margin: 0 1rem;
-}
-
-/* Form Content (Desktop Defaults) */
-.formContent {
-    display: flex;
-    flex-direction: column;
-}
-
-.inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-}
-
-.label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.input,
-.select,
-.textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    font-family: inherit;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background: var(--background);
-    color: var(--text-primary);
-}
-
-.input:focus,
-.select:focus,
-.textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-    background: var(--surface);
-}
-
-.urgencyToggle {
-    display: flex;
-    background: var(--background);
-    padding: 4px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-}
-
-.urgencyBtn {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 10px;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 600;
-    color: var(--text-secondary);
-    transition: all 0.3s;
-    font-size: 0.9rem;
-}
-
-.normalActive {
-    background: white;
-    color: var(--primary);
-    box-shadow: var(--shadow-sm);
-}
-
-.criticalActive {
-    background: #FEF2F2;
-    color: #EF4444;
-    box-shadow: var(--shadow-sm);
-}
-
-.submitBtn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.5rem;
-    padding: 1rem;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius-lg);
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-/* Tablet styles */
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
-    .mainCard {
-        padding: 2rem;
-    }
-}
-
-/* ------------------------------------------------------------------
-   MOBILE STYLES (FINAL FIX)
-   ------------------------------------------------------------------
-*/
-@media (max-width: 640px) {
-    .container {
-        /* FIX 1: উপরে কোনো প্যাডিং বা মার্জিন নেই, তাই এক্সট্রা বক্স দেখাবে না */
-        padding: 0 !important;
-        margin: 0 !important;
-        max-width: 100%;
-        display: block;
-        background-color: #F9FAFB;
-        min-height: 100vh;
-    }
-
-    /* FIX 2: মেইন কার্ডের বক্স ইফেক্ট রিমুভ (Transparent) */
-    .mainCard.mainCard {
-        padding: 1.5rem 1rem 0 1rem; /* কন্টেন্ট স্পেসিং */
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        background: transparent !important; /* ট্রান্সপারেন্ট */
-        border: none !important;
-    }
-
-    /* সুডো এলিমেন্ট রিমুভ (যদি গ্লাস ইফেক্ট থেকে থাকে) */
-    .mainCard.mainCard::before,
-    .mainCard.mainCard::after {
-        display: none !important;
-    }
-
-    .header {
-        margin-bottom: 1.5rem;
-        margin-top: 1rem;
-        text-align: center;
-    }
-
-    .iconCircle {
-        margin: 0 auto 1rem;
-        width: 56px;
-        height: 56px;
-        background: #FEF2F2;
-    }
-
-    .title {
-        font-size: 1.75rem;
-        letter-spacing: -0.02em;
-    }
-
-    /* AI Section - Flat Design */
-    .aiSection {
-        padding: 1rem;
+        padding: 0.75rem 1rem;
+        /* Decreased vertical padding (Height reduced) */
         margin-bottom: 2rem;
         background: linear-gradient(135deg, var(--primary) 0%, #0F766E 100%);
-        border-radius: 12px;
-        margin-left: 0;
-        margin-right: 0;
+        border-radius: 16px;
+        /* Round edges */
+        margin-left: -0.5rem;
+        /* Increase width */
+        margin-right: -0.5rem;
+        /* Increase width */
     }
 
     .aiHeader {
@@ -756,47 +421,15 @@ body {
         border-radius: 12px;
     }
 
-    /* FIX 3: নিচের ম্যানুয়াল ফর্মটিকে একটি আলাদা সাদা কার্ড বানানো হলো */
+    /* Manual form card effect for mobile */
     .formContent {
-        background: white;        /* সাদা বক্স ব্যাকগ্রাউন্ড */
-        padding: 1.5rem;          /* ভিতরের স্পেস */
-        border-radius: 20px 20px 0 0; /* শুধুমাত্র উপরের কোণাগুলো গোল */
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.05); /* হালকা শ্যাডো */
-        margin: 0 -1rem;          /* নেগেটিভ মার্জিন দিয়ে পাশে মিলিয়ে দেওয়া হয়েছে */
-        width: calc(100% + 2rem); /* ফুল উইডথ */
-        border-top: 1px solid rgba(0,0,0,0.03);
-        padding-bottom: 3rem;     /* নিচের দিকে একটু স্পেস */
-    }
-
-    /* ইনপুট ফিল্ড স্টাইল */
-    .inputGroup {
-        margin-bottom: 1.5rem;
-        gap: 0.5rem;
-    }
-
-    .label {
-        font-size: 0.95rem;
-        margin-left: 4px;
-        font-weight: 700;
-        color: #374151;
-    }
-
-    .input,
-    .select,
-    .textarea {
-        padding: 16px;
-        font-size: 1.05rem;
-        background: #F3F4F6;
-        border: 1px solid #E5E7EB;
-        border-radius: 12px;
-        color: #111827;
-    }
-
-    .divider {
-        margin: 2rem 0;
-        font-size: 0.85rem;
-        opacity: 0.6;
-        color: #6B7280;
+        background: var(--surface);
+        margin: 0 -1.5rem;
+        /* Bleed to edges */
+        padding: 2rem 1.5rem 3rem 1.5rem;
+        border-radius: 32px;
+        /* Round all corners */
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
     }
 
     .submitBtn {
