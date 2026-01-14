@@ -1,58 +1,49 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
 import { Trash, Megaphone, Clock, CheckCircle, Spinner } from 'phosphor-react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseClient';
+import { bloodApi } from '@/services/api/blood';
 import styles from './styles/MyBloodRequests.module.css';
-
-interface BloodRequest {
-    id: string;
-    blood_group: string;
-    hospital_name: string;
-    urgency: 'NORMAL' | 'CRITICAL';
-    status: string;
-    created_at: string;
-    reason: string;
-}
 
 export default function MyBloodRequests() {
     const { t } = useTranslation();
-    const [requests, setRequests] = useState<BloodRequest[]>([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const fetchMyRequests = async () => {
+    // 1. Fetch User ID
+    const { data: userId } = useQuery({
+        queryKey: ['userSession'],
+        queryFn: async () => {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-
-            const { data, error } = await supabase
-                .from('blood_requests')
-                .select('*')
-                .eq('requester_id', user.id)
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                setRequests(data as BloodRequest[]);
-            }
-            setLoading(false);
-        };
-
-        fetchMyRequests();
-    }, []);
-
-    const deleteRequest = async (id: string) => {
-        if (!confirm(t('blood.my_requests.confirm_delete'))) return;
-
-        const { error } = await supabase.from('blood_requests').delete().eq('id', id);
-        if (error) {
-            alert(t('blood.my_requests.delete_fail'));
-        } else {
-            setRequests(prev => prev.filter(r => r.id !== id));
+            return user?.id;
         }
+    });
+
+    // 2. Fetch Requests using React Query
+    const { data: requests = [], isLoading } = useQuery({
+        queryKey: ['myBloodRequests', userId],
+        queryFn: () => bloodApi.getMyRequests(userId),
+        enabled: !!userId, // Only run if userId is available
+    });
+
+    // 3. Delete Mutation
+    const deleteMutation = useMutation({
+        mutationFn: bloodApi.deleteRequest,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['myBloodRequests'] });
+        },
+        onError: () => {
+            alert(t('blood.my_requests.delete_fail', 'Failed to delete request.'));
+        }
+    });
+
+    const handleDelete = async (id: string) => {
+        if (!confirm(t('blood.my_requests.confirm_delete', 'Are you sure?'))) return;
+        deleteMutation.mutate(id);
     };
 
-    if (loading) return (
+    if (isLoading) return (
         <div className={styles.loadingWrapper}>
             <Spinner size={32} className={styles.spinner} />
         </div>
@@ -114,7 +105,12 @@ export default function MyBloodRequests() {
                                         {req.reason && <p className={styles.reasonText}>"{req.reason}"</p>}
                                     </div>
                                     <div className={styles.actions}>
-                                        <button onClick={() => deleteRequest(req.id)} className={styles.deleteBtn} title={t('blood.my_requests.delete_btn')}>
+                                        <button
+                                            onClick={() => handleDelete(req.id)}
+                                            className={styles.deleteBtn}
+                                            title={t('blood.my_requests.delete_btn')}
+                                            disabled={deleteMutation.isPending}
+                                        >
                                             <Trash size={20} />
                                         </button>
                                     </div>
