@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { X, Plus, Trash, Prescription, Pill, Clock, NotePencil, ArrowRight } from 'phosphor-react';
+import { X, Plus, Trash, Prescription, Pill, Clock, NotePencil, ArrowRight, Flask } from 'phosphor-react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './styles/DoctorModals.module.css';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 interface MedicineInput {
+    id: string; // for list keys
     name: string;
     dosage: string;
     duration: string;
@@ -20,25 +22,30 @@ interface MedicineInput {
 export default function PrescriptionModal({ patientId, onClose, onSuccess }: Props) {
     const { t } = useTranslation();
     const [medicines, setMedicines] = useState<MedicineInput[]>([
-        { name: '', dosage: '', duration: '', instruction: '' }
+        { id: crypto.randomUUID(), name: '', dosage: '', duration: '', instruction: '' }
     ]);
     const [advice, setAdvice] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleAddRow = () => {
-        setMedicines([...medicines, { name: '', dosage: '', duration: '', instruction: '' }]);
+        setMedicines([...medicines, {
+            id: crypto.randomUUID(),
+            name: '',
+            dosage: '',
+            duration: '',
+            instruction: ''
+        }]);
     };
 
-    const handleRemoveRow = (index: number) => {
-        const list = [...medicines];
-        list.splice(index, 1);
-        setMedicines(list);
+    const handleRemoveRow = (id: string) => {
+        if (medicines.length === 1) return;
+        setMedicines(medicines.filter(m => m.id !== id));
     };
 
-    const handleChange = (index: number, field: keyof MedicineInput, value: string) => {
-        const list = [...medicines];
-        list[index][field] = value;
-        setMedicines(list);
+    const handleChange = (id: string, field: keyof Omit<MedicineInput, 'id'>, value: string) => {
+        setMedicines(medicines.map(m =>
+            m.id === id ? { ...m, [field]: value } : m
+        ));
     };
 
     const handleSubmit = async () => {
@@ -48,6 +55,9 @@ export default function PrescriptionModal({ patientId, onClose, onSuccess }: Pro
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
+        // Strip IDs before sending
+        const cleanMedicines = medicines.map(({ id, ...rest }) => rest);
+
         const { error } = await supabase.from('medical_events').insert({
             patient_id: patientId,
             uploader_id: user.id,
@@ -56,7 +66,7 @@ export default function PrescriptionModal({ patientId, onClose, onSuccess }: Pro
             event_date: new Date().toISOString(),
             severity: 'LOW',
             summary: advice,
-            medicines: medicines,
+            medicines: cleanMedicines,
             key_findings: []
         });
 
@@ -72,96 +82,125 @@ export default function PrescriptionModal({ patientId, onClose, onSuccess }: Pro
     };
 
     return (
-        <div className={styles.overlay}>
-            <div className={styles.modal}>
+        <motion.div
+            className={styles.overlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+            <motion.div
+                className={styles.modal}
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            >
                 <button onClick={onClose} className={styles.closeBtn}>
-                    <X size={24} />
+                    <X size={24} weight="bold" />
                 </button>
 
                 <h2>
-                    <Prescription size={32} color="var(--primary)" weight="duotone" style={{ verticalAlign: 'middle', marginRight: '12px' }} />
+                    <Prescription size={32} color="var(--primary)" weight="duotone" />
                     {t('dashboard.doctor.profile.new_prescription') || 'Write Prescription'}
                 </h2>
 
                 <div style={{ flex: 1, overflowY: 'auto', paddingRight: '5px' }}>
 
-                    {/* Medicine List */}
-                    {medicines.map((med, index) => (
-                        <div key={index} className={styles.medicineRow}>
+                    <div className={styles.medicineList}>
+                        <AnimatePresence initial={false}>
+                            {medicines.map((med) => (
+                                <motion.div
+                                    key={med.id}
+                                    className={styles.medicineRow}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0, marginBottom: 0, padding: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                >
 
-                            {/* Name Input */}
-                            <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
-                                <label className={styles.mobileOnlyLabel}>Medicine Name</label>
-                                <div className={styles.inputIconWrapper}>
-                                    <Pill size={20} className={styles.inputIcon} />
-                                    <input
-                                        placeholder="Name (e.g. Napa)"
-                                        value={med.name}
-                                        onChange={(e) => handleChange(index, 'name', e.target.value)}
-                                        className={`${styles.input} ${styles.inputWithIcon}`}
-                                    />
-                                </div>
-                            </div>
+                                    {/* Name Input */}
+                                    <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                        <label className={styles.mobileOnlyLabel}>Medicine Name</label>
+                                        <div className={styles.inputIconWrapper}>
+                                            <Pill size={20} className={styles.inputIcon} weight="duotone" />
+                                            <input
+                                                placeholder="Medicine Name (e.g. Napa)"
+                                                value={med.name}
+                                                onChange={(e) => handleChange(med.id, 'name', e.target.value)}
+                                                className={`${styles.input} ${styles.inputWithIcon}`}
+                                                autoFocus={medicines.length > 1 && medicines[medicines.length - 1].id === med.id}
+                                            />
+                                        </div>
+                                    </div>
 
-                            {/* Dosage Input */}
-                            <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
-                                <label className={styles.mobileOnlyLabel}>Dosage</label>
-                                <input
-                                    placeholder="1+0+1"
-                                    value={med.dosage}
-                                    onChange={(e) => handleChange(index, 'dosage', e.target.value)}
-                                    className={`${styles.input}`}
-                                    style={{ textAlign: 'center' }}
-                                />
-                            </div>
+                                    {/* Dosage Input */}
+                                    <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                        <label className={styles.mobileOnlyLabel}>Dosage</label>
+                                        <div className={styles.inputIconWrapper}>
+                                            <Flask size={20} className={styles.inputIcon} weight="duotone" />
+                                            <input
+                                                placeholder="1+0+1"
+                                                value={med.dosage}
+                                                onChange={(e) => handleChange(med.id, 'dosage', e.target.value)}
+                                                className={`${styles.input} ${styles.inputWithIcon}`}
+                                            />
+                                        </div>
+                                    </div>
 
-                            {/* Duration Input */}
-                            <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
-                                <label className={styles.mobileOnlyLabel}>Duration</label>
-                                <div className={styles.inputIconWrapper}>
-                                    <Clock size={20} className={styles.inputIcon} />
-                                    <input
-                                        placeholder="7 Days"
-                                        value={med.duration}
-                                        onChange={(e) => handleChange(index, 'duration', e.target.value)}
-                                        className={`${styles.input} ${styles.inputWithIcon}`}
-                                    />
-                                </div>
-                            </div>
+                                    {/* Duration Input */}
+                                    <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                        <label className={styles.mobileOnlyLabel}>Duration</label>
+                                        <div className={styles.inputIconWrapper}>
+                                            <Clock size={20} className={styles.inputIcon} weight="duotone" />
+                                            <input
+                                                placeholder="7 Days"
+                                                value={med.duration}
+                                                onChange={(e) => handleChange(med.id, 'duration', e.target.value)}
+                                                className={`${styles.input} ${styles.inputWithIcon}`}
+                                            />
+                                        </div>
+                                    </div>
 
-                            {/* Instruction Input */}
-                            <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
-                                <label className={styles.mobileOnlyLabel}>Note</label>
-                                <div className={styles.inputIconWrapper}>
-                                    <NotePencil size={20} className={styles.inputIcon} />
-                                    <input
-                                        placeholder="After meal"
-                                        value={med.instruction}
-                                        onChange={(e) => handleChange(index, 'instruction', e.target.value)}
-                                        className={`${styles.input} ${styles.inputWithIcon}`}
-                                    />
-                                </div>
-                            </div>
+                                    {/* Instruction Input */}
+                                    <div className={styles.inputGroup} style={{ marginBottom: 0 }}>
+                                        <label className={styles.mobileOnlyLabel}>Note</label>
+                                        <div className={styles.inputIconWrapper}>
+                                            <NotePencil size={20} className={styles.inputIcon} weight="duotone" />
+                                            <input
+                                                placeholder="Note (e.g. After meal)"
+                                                value={med.instruction}
+                                                onChange={(e) => handleChange(med.id, 'instruction', e.target.value)}
+                                                className={`${styles.input} ${styles.inputWithIcon}`}
+                                            />
+                                        </div>
+                                    </div>
 
-                            {/* Remove Button */}
-                            {medicines.length > 1 && (
-                                <button onClick={() => handleRemoveRow(index)} className={styles.removeBtn} title="Remove Medicine">
-                                    <Trash size={18} />
-                                </button>
-                            )}
-                        </div>
-                    ))}
+                                    {/* Remove Button */}
+                                    {medicines.length > 1 && (
+                                        <button onClick={() => handleRemoveRow(med.id)} className={styles.removeBtn} title="Remove Medicine">
+                                            <Trash size={18} weight="bold" />
+                                        </button>
+                                    )}
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
 
-                    <button onClick={handleAddRow} className={styles.addBtn}>
+                    <motion.button
+                        onClick={handleAddRow}
+                        className={styles.addBtn}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                    >
                         <Plus size={18} weight="bold" /> Add Another Medicine
-                    </button>
+                    </motion.button>
 
                     {/* Advice Section */}
                     <div style={{ marginTop: '24px' }}>
-                        <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <NotePencil size={20} />
+                        <div className={styles.label}>
+                            <NotePencil size={20} weight="duotone" />
                             {t('dashboard.doctor.profile.notes_label') || 'Medical Advice / Notes'}
-                        </label>
+                        </div>
                         <textarea
                             className={styles.textarea}
                             rows={4}
@@ -172,23 +211,23 @@ export default function PrescriptionModal({ patientId, onClose, onSuccess }: Pro
                     </div>
                 </div>
 
-                <button
+                <motion.button
                     onClick={handleSubmit}
                     className={styles.submitBtn}
                     disabled={loading}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                        {loading ? (
-                            <>Sending...</>
-                        ) : (
-                            <>
-                                {t('dashboard.doctor.profile.confirm_send') || 'Send Prescription'}
-                                <ArrowRight size={20} weight="bold" />
-                            </>
-                        )}
-                    </div>
-                </button>
-            </div>
-        </div>
+                    {loading ? (
+                        <>Sending Prescription...</>
+                    ) : (
+                        <>
+                            {t('dashboard.doctor.profile.confirm_send') || 'Send Prescription'}
+                            <ArrowRight size={20} weight="bold" />
+                        </>
+                    )}
+                </motion.button>
+            </motion.div>
+        </motion.div>
     );
 }

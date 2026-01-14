@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/shared/lib/supabaseClient';
 import {
@@ -64,19 +65,36 @@ export default function ProfilePage() {
     if (loading) return <div className={styles.loading}>{t('profile.loading')}</div>;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.pageHeader}>
+        <motion.div
+            className={styles.container}
+            initial="hidden"
+            animate="visible"
+            variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 }
+                }
+            }}
+        >
+            <motion.div
+                className={styles.pageHeader}
+                variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
+            >
                 <h2 className={styles.pageTitle}>{t('profile.title')}</h2>
                 <button
                     onClick={() => navigate('/profile/edit')}
                     className={styles.editBtn}
                 >
-                    <PencilSimple size={18} /> {t('common.edit')}
+                    <PencilSimple size={18} weight="bold" /> {t('common.edit')}
                 </button>
-            </div>
+            </motion.div>
 
             {/* Profile Card */}
-            <div className={styles.profileCard}>
+            <motion.div
+                className={styles.profileCard}
+                variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1 } }}
+            >
                 <div className={styles.avatarCircle}>
                     {profile?.full_name?.[0]?.toUpperCase() || <User />}
                 </div>
@@ -96,43 +114,58 @@ export default function ProfilePage() {
                         <Badge icon={<Heartbeat weight="fill" />} text={profile.specialty} color="#059669" bg="#D1FAE5" />
                     )}
                 </div>
-            </div>
+            </motion.div>
 
             {/* Doctor Specific Details */}
             {profile?.role === 'DOCTOR' && (
-                <div className={styles.sectionWrapper}>
+                <motion.div
+                    className={styles.sectionWrapper}
+                    variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+                >
                     <h3 className={styles.sectionTitle}>{t('profile.professional')}</h3>
                     <div className={styles.infoStack}>
-                        {profile.degree && <InfoRow icon={<GraduationCap />} label={t('profile.fields.degree')} value={profile.degree} />}
-                        {profile.consultation_fee && <InfoRow icon={<Wallet />} label={t('profile.fields.fees')} value={`৳${profile.consultation_fee}`} />}
+                        {profile.degree && <InfoRow icon={<GraduationCap weight="duotone" size={24} />} label={t('profile.fields.degree')} value={profile.degree} />}
+                        {profile.consultation_fee && <InfoRow icon={<Wallet weight="duotone" size={24} />} label={t('profile.fields.fees')} value={`৳${profile.consultation_fee}`} />}
                         {profile.about && <div className={styles.aboutBox}>"{profile.about}"</div>}
                     </div>
-                </div>
+                </motion.div>
             )}
 
             {/* General Info */}
-            <div className={styles.sectionWrapper}>
+            <motion.div
+                className={styles.sectionWrapper}
+                variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+            >
                 <h3 className={styles.sectionTitle}>{t('profile.contact_info')}</h3>
                 <div className={styles.infoStack}>
-                    <InfoRow icon={<Phone />} label={t('profile.fields.phone')} value={profile?.phone || 'N/A'} />
-                    <InfoRow icon={<Envelope />} label={t('profile.fields.email')} value={profile?.email || ''} />
+                    <InfoRow icon={<Phone weight="duotone" size={24} />} label={t('profile.fields.phone')} value={profile?.phone || 'N/A'} />
+                    <InfoRow icon={<Envelope weight="duotone" size={24} />} label={t('profile.fields.email')} value={profile?.email || ''} />
                 </div>
-            </div>
+            </motion.div>
 
             {/* Activity Links */}
-            <div className={styles.sectionWrapper}>
+            <motion.div
+                className={styles.sectionWrapper}
+                variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+            >
                 <h3 className={styles.sectionTitle}>{t('profile.activity')}</h3>
                 <div className={styles.infoStack}>
                     {/* Removed My Appointments link as it is now in Sidebar */}
-                    <NavButton onClick={() => navigate('/blood/my-requests')} icon={<Drop size={20} />} label={t('profile.my_blood_requests')} color="#EF4444" bg="#FEF2F2" />
-                    <NavButton onClick={() => navigate('/blood/register')} icon={<User size={20} />} label={t('profile.donor_settings')} color="#10B981" bg="#F0FDF4" />
+                    <NavButton onClick={() => navigate('/blood/my-requests')} icon={<Drop size={20} weight="fill" />} label={t('profile.my_blood_requests')} color="#EF4444" bg="#FEF2F2" />
+                    <NavButton onClick={() => navigate('/blood/register')} icon={<User size={20} weight="fill" />} label={t('profile.donor_settings')} color="#10B981" bg="#F0FDF4" />
                 </div>
-            </div>
+            </motion.div>
 
-            <button onClick={handleLogout} className={styles.logoutBtn}>
+            <motion.button
+                onClick={handleLogout}
+                className={styles.logoutBtn}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+            >
                 <SignOut size={20} weight="bold" /> {t('common.logout')}
-            </button>
-        </div>
+            </motion.button>
+        </motion.div>
     );
 }
 
