@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
 import TimelineTile from './TimelineTile';
 import EventDetailsModal from './EventDetailsModal';

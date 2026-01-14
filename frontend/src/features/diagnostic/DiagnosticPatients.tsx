@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { User } from 'phosphor-react';
 import styles from './styles/DiagnosticPatients.module.css';
 

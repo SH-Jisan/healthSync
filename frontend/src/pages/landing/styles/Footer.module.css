@@ -1,28 +1,61 @@
 .footer {
-    background-color: #111827;
+    background-color: var(--surface-dark);
     color: white;
     padding: 100px 5% 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .content {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 80px;
-    max-width: 1200px;
-    margin: 0 auto 60px;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    /* Added extra column */
+    gap: 60px;
+    max-width: 1400px;
+    margin: 0 auto 80px;
 }
 
 .column h3 {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    color: var(--primary-light);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.description {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 300px;
+    margin-bottom: 2rem;
+}
+
+.socialRow {
+    display: flex;
+    gap: 15px;
+}
+
+.socialIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s var(--ease-smooth);
+    cursor: pointer;
+}
+
+.socialIcon:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
 }
 
 .column ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .column ul li {
@@ -30,41 +63,52 @@
 }
 
 .column ul li a {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-secondary);
     text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 1.05rem;
+    transition: all 0.3s var(--ease-smooth);
+    font-size: 1rem;
+    display: inline-block;
 }
 
 .column ul li a:hover {
-    color: white;
-    padding-left: 5px;
+    color: var(--primary);
+    transform: translateX(5px);
 }
 
 .bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 30px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.95rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-@media(max-width: 768px) {
-    .footer {
-        padding: 60px 20px 30px;
+@media (max-width: 1024px) {
+    .content {
+        grid-template-columns: 1fr 1fr;
     }
+}
 
+@media (max-width: 640px) {
     .content {
         grid-template-columns: 1fr;
-        gap: 50px;
         text-align: center;
     }
 
-    .column h3 {
-        margin-bottom: 10px;
+    .description {
+        margin: 0 auto 2rem;
     }
 
-    .column ul li a:hover {
-        padding-left: 0;
+    .socialRow {
+        justify-content: center;
+    }
+
+    .bottom {
+        flex-direction: column;
+        gap: 20px;
     }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import CitizenHome from './CitizenHome';
 import DoctorHome from './DoctorHome';
 import HospitalHome from './HospitalHome';

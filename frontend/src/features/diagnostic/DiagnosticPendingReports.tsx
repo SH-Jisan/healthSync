@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClipboardText, ArrowRight } from 'phosphor-react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import styles from './styles/DiagnosticPatients.module.css';
 
 /* =======================

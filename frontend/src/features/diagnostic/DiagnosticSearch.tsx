@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { MagnifyingGlass, Person } from 'phosphor-react';
 import styles from './styles/DiagnosticSearch.module.css';
 

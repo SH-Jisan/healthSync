@@ -20,47 +20,42 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
 
     return (
         <nav className={styles.navbar}>
-            <div
-                className={styles.logo}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-                {/* Invisible Placeholder Image */}
-                <img
-                    src="/logo2.png"
-                    alt="HealthSync Logo"
-                    className={styles.logoImage}
-                    style={{ opacity: 0 }}
-                />
-
-                {/* [FIXED] Colored Text for Glass Background */}
-                {/* [FIXED] Colored Text for Glass Background */}
-                <span
-                    className={styles.logoText}
-                    style={{
-                        opacity: showLogo ? 1 : 0,
-                        visibility: showLogo ? 'visible' : 'hidden',
-                    }}
+            <div className={styles.navContainer}>
+                <div
+                    className={styles.logo}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 >
-                    {/* Health: গাঢ় নীল */}
-                    <span style={{ color: '#0056D2' }}>Health</span>
+                    <div style={{
+                        opacity: showLogo ? 1 : 0,
+                        transition: `opacity 0.5s ease ${showLogo ? '1.0s' : '0s'}`,
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <img
+                            src="/icon.png"
+                            alt="HealthSync Logo"
+                            className={styles.logoImage}
+                        />
+                        <span className={styles.logoText}>
+                            <span style={{ color: 'var(--gradient-start)' }}>Health</span>
+                            <span style={{ color: 'var(--gradient-end)' }}>Sync</span>
+                        </span>
+                    </div>
+                </div>
 
-                    {/* Sync: উজ্জ্বল সবুজ */}
-                    <span style={{ color: '#00796B' }}>Sync</span>
-                </span>
-            </div>
+                <ul className={styles.navItems}>
+                    <li><a onClick={() => scrollToSection('features')}>{t('landing.nav_features', 'Features')}</a></li>
+                    <li><a onClick={() => scrollToSection('about')}>{t('landing.nav_about', 'About')}</a></li>
+                    <li><a onClick={() => scrollToSection('contact')}>{t('landing.nav_contact', 'Contact')}</a></li>
+                </ul>
 
-            <ul className={styles.navItems}>
-                <li><a onClick={() => scrollToSection('features')}>{t('landing.nav_features', 'Features')}</a></li>
-                <li><a onClick={() => scrollToSection('about')}>{t('landing.nav_about', 'About')}</a></li>
-                <li><a onClick={() => scrollToSection('contact')}>{t('landing.nav_contact', 'Contact')}</a></li>
-            </ul>
-
-            <div className={styles.navActions}>
-                <LanguageSwitcher variant="text" className={styles.langToggle} />
-                <div className={styles.loginBtn}>
-                    <button onClick={() => navigate('/login')}>
-                        {t('common.login', 'Login')}
-                    </button>
+                <div className={styles.navActions}>
+                    <LanguageSwitcher variant="text" className={styles.langToggle} />
+                    <div className={styles.loginBtn}>
+                        <button onClick={() => navigate('/login')}>
+                            {t('common.login', 'Login')}
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>

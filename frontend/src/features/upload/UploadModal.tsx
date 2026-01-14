@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { CloudArrowUp, X, FileImage, Spinner, Warning } from 'phosphor-react';
 import styles from './UploadModal.module.css';
 
@@ -176,7 +176,7 @@ export default function UploadModal({ onClose, onSuccess, patientId }: Props) {
 
                 {status && (
                     <div className={`${styles.status} ${isError ? styles.statusError : isDuplicate ? styles.statusWarning : styles.statusUploading}`}>
-                        {isDuplicate && <Warning size={20} style={{marginRight: 5}} />}
+                        {isDuplicate && <Warning size={20} style={{ marginRight: 5 }} />}
                         {status}
                     </div>
                 )}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { User, UserPlus, ArrowRight } from 'phosphor-react';
 import styles from './styles/DoctorMyPatients.module.css';
 

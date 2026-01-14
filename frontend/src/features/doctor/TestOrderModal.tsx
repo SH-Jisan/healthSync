@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, CheckCircle, Flask } from 'phosphor-react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import styles from './styles/DoctorModals.module.css';
 

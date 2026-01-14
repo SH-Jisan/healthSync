@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Translate } from 'phosphor-react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '@/app/providers/LanguageContext';
 import styles from './LanguageSwitcher.module.css';
 
 interface LanguageSwitcherProps {

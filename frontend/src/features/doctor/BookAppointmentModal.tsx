@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { X, CalendarCheck } from 'phosphor-react';
 import type { Doctor } from '../../types';
 import styles from './styles/BookAppointmentModal.module.css';

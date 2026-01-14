@@ -1,6 +1,6 @@
 // src/features/health-plan/HealthPlanView.tsx
 import { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { ForkKnife, Barbell, Warning, Sparkle } from 'phosphor-react';
 import styles from './HealthPlan.module.css';
 import { useTranslation } from 'react-i18next';

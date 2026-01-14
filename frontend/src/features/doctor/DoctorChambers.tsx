@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { Buildings, Plus, Trash, Clock } from 'phosphor-react';
 import styles from './styles/DoctorChambers.module.css';
 

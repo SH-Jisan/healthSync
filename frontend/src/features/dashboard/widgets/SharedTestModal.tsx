@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Flask, CheckCircle, Spinner, Plus, FloppyDisk, ArrowLeft } from 'phosphor-react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import styles from './styles/SharedTestModal.module.css';
 

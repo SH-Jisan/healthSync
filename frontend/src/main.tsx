@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import './styles/index.css'
+import './app/styles/index.css'
 import App from './App.tsx'
-import './lib/i18n.ts';
-import { LanguageProvider } from "./context/LanguageContext.tsx";
+import './shared/lib/i18n.ts';
+import { LanguageProvider } from "./app/providers/LanguageContext.tsx";
 
 const queryClient = new QueryClient();
 

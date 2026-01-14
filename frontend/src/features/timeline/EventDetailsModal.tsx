@@ -10,7 +10,7 @@ import {
     Robot, CheckCircle, Warning, ShieldCheck, FirstAid, Info
 } from 'phosphor-react';
 import { format, isValid } from 'date-fns';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from './styles/EventDetailsModal.module.css';

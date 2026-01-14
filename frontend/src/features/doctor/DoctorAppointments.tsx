@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '@/shared/lib/supabaseClient';
 import type { Appointment } from '../../types';
 import { CheckCircle, XCircle, Clock, User, Calendar } from 'phosphor-react';
 import { format } from 'date-fns';

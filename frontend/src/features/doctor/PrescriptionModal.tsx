@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Plus, Trash, Prescription, Pill, Clock, NotePencil, ArrowRight } from 'phosphor-react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import styles from './styles/DoctorModals.module.css';
 

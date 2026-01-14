@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '@/shared/lib/supabaseClient';
 import { ArrowLeft, CheckCircle, Upload, Plus, Prescription, Flask, CaretLeft } from 'phosphor-react';
 import UploadModal from '../upload/UploadModal';
 import SharedTestModal from '../dashboard/widgets/SharedTestModal';
