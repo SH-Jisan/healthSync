@@ -1,19 +1,23 @@
 // File: HealthSync/web/src/features/timeline/EventDetailsModal.tsx
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
-    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
-    Robot, CheckCircle, Warning, ShieldCheck, FirstAid, Info
+    DownloadSimple, Heartbeat, Thermometer, Drop, Eye, CheckCircle, FirstAid, WarningCircle
 } from 'phosphor-react';
 import { format, isValid } from 'date-fns';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from './styles/EventDetailsModal.module.css';
+import DiseaseInsight from './components/DiseaseInsight'; // [NEW]
+import MedicineTable from './components/MedicineTable';   // [NEW]
+
+// Lazy load the printable view to save initial bundle/DOM size
+const PrintablePrescription = React.lazy(() => import('./components/PrintablePrescription'));
 
 interface EventDetailsProps {
     event: MedicalEvent;
@@ -26,9 +30,22 @@ const safeFormat = (dateString: string | undefined, dateFormat: string) => {
     return isValid(date) ? format(date, dateFormat) : 'Invalid Date';
 };
 
-export default React.forwardRef(function EventDetailsModal(
-    { event, onClose }: EventDetailsProps,
-    ref: React.Ref<HTMLDivElement>
+// Extracted VitalCard to prevent re-creation
+const VitalCard = React.memo(({ icon, label, value, unit, color, bg }: any) => (
+    <div className={styles.vitalCard}>
+        <div className={styles.vitalIcon} style={{ background: bg, color: color }}>
+            {icon}
+        </div>
+        <div className={styles.vitalValue}>
+            {value} <span className={styles.vitalUnit}>{unit}</span>
+        </div>
+        <div className={styles.vitalLabel}>{label}</div>
+    </div>
+));
+
+const EventDetailsModal = React.forwardRef<HTMLDivElement, EventDetailsProps>(function EventDetailsModal(
+    { event, onClose },
+    ref
 ) {
     // 1. Language Setup
     const { t, i18n } = useTranslation();
@@ -38,7 +55,7 @@ export default React.forwardRef(function EventDetailsModal(
     const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file' | 'prescription'>(
         event.event_type === 'PRESCRIPTION' ? 'prescription' : 'overview'
     );
-    const printRef = useRef<HTMLDivElement>(null);
+    const [isPrinting, setIsPrinting] = useState(false);
 
     // 3. AI Data Extraction
     const aiData = event.ai_details;
@@ -66,8 +83,20 @@ export default React.forwardRef(function EventDetailsModal(
     };
 
     const handlePrint = () => {
-        window.print();
+        setIsPrinting(true);
     };
+
+    // Handle printing effect
+    useEffect(() => {
+        if (isPrinting) {
+            // Small delay to ensure render
+            const timer = setTimeout(() => {
+                window.print();
+                setIsPrinting(false);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [isPrinting]);
 
     const handleDownload = async () => {
         if (event.attachment_urls && event.attachment_urls.length > 0) {
@@ -91,50 +120,10 @@ export default React.forwardRef(function EventDetailsModal(
         tabs.unshift('prescription');
     }
 
-    // Helper for Safety Badge
-    const getSafetyBadge = (status: string) => {
-        if (status === 'Safe') return <span className={`${styles.safetyBadge} ${styles.safe}`}><ShieldCheck size={16} weight="fill" /> Safe</span>;
-        if (status === 'Caution') return <span className={`${styles.safetyBadge} ${styles.caution}`}><Warning size={16} weight="fill" /> Caution</span>;
-        if (status === 'Danger') return <span className={`${styles.safetyBadge} ${styles.danger}`}><WarningCircle size={16} weight="fill" /> Danger</span>;
-        return null;
-    };
-
-    const renderDiseaseInsight = (insight: string | any) => {
-        if (!insight) return null;
-
-        // If simple string
-        if (typeof insight === 'string') {
-            return <div className={styles.diseaseText}>{insight}</div>;
-        }
-
-        // If Object (Structured)
-        return (
-            <div className={styles.structuredInsight}>
-                <div className={styles.insightHeader}>
-                    <h4>{insight.disease_name} <span className={styles.localName}>({insight.local_name})</span></h4>
-                    {insight.seriousness && (
-                        <span className={`${styles.seriousnessBadge} ${styles[insight.seriousness.toLowerCase()]}`}>
-                            {insight.seriousness}
-                        </span>
-                    )}
-                </div>
-
-                {insight.symptoms && insight.symptoms.length > 0 && (
-                    <div className={styles.insightSection}>
-                        <strong><WarningCircle size={14} /> Symptoms:</strong>
-                        <p>{Array.isArray(insight.symptoms) ? insight.symptoms.join(', ') : insight.symptoms}</p>
-                    </div>
-                )}
-
-                {insight.causes && insight.causes.length > 0 && (
-                    <div className={styles.insightSection}>
-                        <strong><Info size={14} /> Causes:</strong>
-                        <p>{Array.isArray(insight.causes) ? insight.causes.join(', ') : insight.causes}</p>
-                    </div>
-                )}
-            </div>
-        );
-    };
+    // Optimization: Memoize render-heavy parts
+    const memoizedMarkdown = React.useMemo(() => (
+        <ReactMarkdown>{detailedAnalysis || ''}</ReactMarkdown>
+    ), [detailedAnalysis]);
 
     return (
         <motion.div
@@ -199,6 +188,11 @@ export default React.forwardRef(function EventDetailsModal(
 
                         {/* TAB: PRESCRIPTION */}
                         {activeTab === 'prescription' && (
+                            // Use the same component structure but inside the modal
+                            // Since PrintablePrescription styles are mostly generic, we can reuse logic or just keep the inline code if extracted
+                            // Actually, for consistency with 'Print', maybe we should use the PrintablePrescription *component* here too?
+                            // But PrintablePrescription has 'printOnly' class.
+                            // Let's keep the inline implementation but use extracted helpers where possible.
                             <div className={styles.prescriptionView}>
                                 <div className={styles.prescriptionHeader}>
                                     <div className={styles.brand}>
@@ -220,7 +214,10 @@ export default React.forwardRef(function EventDetailsModal(
                                 <div className={styles.rxSection}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <h2>Rx</h2>
-                                        {getSafetyBadge(safetyStatus)}
+                                        {/* Use the safe/caution badge logic */}
+                                        {safetyStatus === 'Safe' && <span className={`${styles.safetyBadge} ${styles.safe}`}><CheckCircle size={16} weight="fill" /> Safe</span>}
+                                        {safetyStatus === 'Caution' && <span className={`${styles.safetyBadge} ${styles.caution}`}><WarningCircle size={16} weight="fill" /> Caution</span>}
+                                        {safetyStatus === 'Danger' && <span className={`${styles.safetyBadge} ${styles.danger}`}><WarningCircle size={16} weight="fill" /> Danger</span>}
                                     </div>
 
                                     <div className={styles.rxList}>
@@ -238,7 +235,7 @@ export default React.forwardRef(function EventDetailsModal(
                                 </div>
 
                                 {/* Show AI Summary on Prescription if available */}
-                                {simpleExplanation && activeTab === 'prescription' && (
+                                {simpleExplanation && (
                                     <div className={styles.adviceBox}>
                                         <h4>AI Explanation:</h4>
                                         <p>{simpleExplanation}</p>
@@ -269,7 +266,7 @@ export default React.forwardRef(function EventDetailsModal(
                                 {aiData ? (
                                     <div className={styles.simpleCard}>
                                         <div className={styles.simpleCardHeader}>
-                                            <Robot size={32} color="#059669" weight="fill" />
+                                            <Drop size={32} color="#059669" weight="fill" /> {/* Placeholder icon if Robot not imported used previously */}
                                             <div>
                                                 <h3 className={styles.simpleCardTitle}>{isBangla ? 'সহজ ব্যাখ্যা' : 'Simple Explanation'}</h3>
                                                 <p className={styles.simpleCardSubtitle}>{isBangla ? 'বাচ্চাদের মতো সহজ করে বুঝুন' : 'Easy to understand summary'}</p>
@@ -303,35 +300,7 @@ export default React.forwardRef(function EventDetailsModal(
 
                         {/* TAB: MEDICINES */}
                         {activeTab === 'medicines' && (
-                            <div className={`${styles.innerContent} ${styles.medicineTableWrapper}`}>
-                                {event.medicines && event.medicines.length > 0 ? (
-                                    <table className={styles.medTable}>
-                                        <thead>
-                                            <tr>
-                                                <th>Medicine Name</th>
-                                                <th>Dosage</th>
-                                                <th>Duration</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {event.medicines.map((med, idx) => (
-                                                <tr key={idx}>
-                                                    <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
-                                                    <td>{med.dosage || '-'}</td>
-                                                    <td>{med.duration || '-'}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <div className={styles.emptyState}>
-                                        <div style={{ color: '#94A3B8' }}>
-                                            <WarningCircle size={48} style={{ opacity: 0.5, marginBottom: '10px' }} />
-                                            <p>No structured medicine data found.</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <MedicineTable medicines={event.medicines} />
                         )}
 
                         {/* TAB: ANALYSIS (Enhanced with Disease Insight) */}
@@ -359,7 +328,7 @@ export default React.forwardRef(function EventDetailsModal(
                                                         {isBangla ? 'সম্ভাব্য রোগ ও অবস্থা' : 'Condition Insight'}
                                                     </h3>
                                                 </div>
-                                                {renderDiseaseInsight(diseaseInsight)}
+                                                <DiseaseInsight insight={diseaseInsight} />
                                             </div>
                                         )}
 
@@ -372,9 +341,7 @@ export default React.forwardRef(function EventDetailsModal(
                                                 </h3>
                                             </div>
                                             <div className={styles.markdownContent}>
-                                                <ReactMarkdown>
-                                                    {detailedAnalysis || ''}
-                                                </ReactMarkdown>
+                                                {memoizedMarkdown}
                                             </div>
                                         </div>
                                     </>
@@ -414,60 +381,20 @@ export default React.forwardRef(function EventDetailsModal(
                 </ErrorBoundary>
             </motion.div>
 
-            <ErrorBoundary>
-                <div className={styles.printOnly} ref={printRef}>
-                    <div className={styles.prescriptionView}>
-                        <div className={styles.prescriptionHeader}>
-                            <div className={styles.brand}>
-                                <h1>HealthSync</h1>
-                            </div>
-                            <div className={styles.docInfo}>
-                                <h3>Dr. {event.uploader?.full_name}</h3>
-                                <p>{event.uploader?.specialty}</p>
-                                <p>{safeFormat(event.event_date, 'dd MMM yyyy')}</p>
-                            </div>
-                        </div>
-                        <div className={styles.patientBar}>
-                            <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
-                            <span><strong>Phone:</strong> {event.profiles?.phone}</span>
-                        </div>
-
-                        <div className={styles.adviceBox}>
-                            <h4>AI Summary:</h4>
-                            <p>{simpleExplanation || event.summary}</p>
-                        </div>
-
-                        {/* Print Disease Insight if available */}
-                        {diseaseInsight && (
-                            <div className={styles.adviceBox} style={{ marginTop: '20px', background: '#eef2ff', borderLeftColor: '#4338ca' }}>
-                                <h4>Possible Condition:</h4>
-                                {renderDiseaseInsight(diseaseInsight)}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </ErrorBoundary>
+            {/* Print Only Section - Lazy Loaded and only mounted when printing */}
+            {isPrinting && (
+                <Suspense fallback={null}>
+                    <PrintablePrescription
+                        event={event}
+                        simpleExplanation={simpleExplanation}
+                        diseaseInsight={diseaseInsight}
+                        safetyStatus={safetyStatus}
+                    />
+                </Suspense>
+            )}
         </motion.div>
     );
 });
 
-// Helper Components (VitalCard) remain unchanged...
-interface VitalCardProps {
-    icon: React.ReactNode;
-    label: string;
-    value: string | number;
-    unit: string;
-    color: string;
-    bg: string;
-}
-const VitalCard = ({ icon, label, value, unit, color, bg }: VitalCardProps) => (
-    <div className={styles.vitalCard}>
-        <div className={styles.vitalIcon} style={{ background: bg, color: color }}>
-            {icon}
-        </div>
-        <div className={styles.vitalValue}>
-            {value} <span className={styles.vitalUnit}>{unit}</span>
-        </div>
-        <div className={styles.vitalLabel}>{label}</div>
-    </div>
-);
+// Memoize the entire modal to prevent re-renders from parent if props haven't changed
+export default React.memo(EventDetailsModal);
