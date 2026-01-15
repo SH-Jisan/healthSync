@@ -10,7 +10,8 @@
     color: white;
     margin-bottom: 2rem;
     box-shadow: var(--shadow-md);
-    text-align: center; /* Center align for better look */
+    text-align: center;
+    /* Center align for better look */
 }
 
 /* Grid Layout for Cards */
@@ -39,7 +40,8 @@
 /* Summary Card spans full width */
 .summaryCard {
     grid-column: 1 / -1;
-    background: linear-gradient(to right, #ecfdf5, #fff); /* Light Green Tint */
+    background: linear-gradient(to right, #ecfdf5, #fff);
+    /* Light Green Tint */
     border-left: 4px solid var(--primary);
 }
 
@@ -61,13 +63,48 @@
     color: var(--primary);
     border: none;
     padding: 0.8rem 2rem;
-    border-radius: 50px; /* Pill shape */
+    border-radius: 50px;
+    /* Pill shape */
     font-weight: 600;
     margin-top: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    /* Flexbox for centering icon and text */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .refreshButton:active {
     transform: scale(0.95);
+}
+
+.refreshButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.savedText {
+    font-size: 0.85rem;
+    color: white;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
 }

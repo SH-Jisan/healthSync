@@ -1,9 +1,10 @@
 // src/features/health-plan/HealthPlanView.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
-import { ForkKnife, Barbell, Warning, Sparkle } from 'phosphor-react';
+import { ForkKnife, Barbell, Warning, Sparkle, FloppyDisk, ArrowsClockwise, CheckCircle } from 'phosphor-react';
 import styles from './HealthPlan.module.css';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
 
 interface HealthPlan {
     diet: string;
@@ -16,8 +17,36 @@ export default function HealthPlanView() {
     const { t, i18n } = useTranslation();
     const [plan, setPlan] = useState<HealthPlan | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [lastSaved, setLastSaved] = useState<string | null>(null);
+    const [saveLoading, setSaveLoading] = useState(false);
 
-    // AI প্ল্যান জেনারেট ফাংশন
+    // Initial Fetch (Load Saved Plan)
+    useEffect(() => {
+        const fetchSavedPlan = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from('ai_health_plans')
+                .select('*')
+                .eq('user_id', user.id)
+                .single();
+
+            if (data && !error) {
+                setPlan({
+                    summary: data.summary,
+                    diet: data.diet_plan,
+                    exercise: data.exercise_plan,
+                    precautions: data.precautions
+                });
+                setIsSaved(true);
+                setLastSaved(data.created_at);
+            }
+        };
+        fetchSavedPlan();
+    }, []);
+
     const generatePlan = async () => {
         setLoading(true);
         try {
@@ -27,7 +56,7 @@ export default function HealthPlanView() {
                 return;
             }
 
-            // আমরা লেটেস্ট মেডিকেল ইভেন্টগুলো পাঠাবো
+            // Fetch latest medical history
             const { data: events } = await supabase
                 .from('medical_events')
                 .select('title, event_type, severity, summary')
@@ -35,7 +64,6 @@ export default function HealthPlanView() {
                 .limit(10)
                 .order('event_date', { ascending: false });
 
-            // Pass the current language to the edge function
             const language = i18n.language === 'bn' ? 'bangla' : 'english';
 
             const { data, error } = await supabase.functions.invoke('generate-health-plan', {
@@ -44,12 +72,47 @@ export default function HealthPlanView() {
 
             if (error) throw error;
             setPlan(data); // { summary, diet, exercise, precautions }
+            setIsSaved(false); // New plan is unsaved
 
         } catch (err) {
             console.error('Error generating plan:', err);
             alert(t('health_plan.alert_fail'));
         } finally {
             setLoading(false);
+        }
+    };
+
+    const savePlan = async () => {
+        if (!plan) return;
+        setSaveLoading(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("No user found");
+
+            const payload = {
+                user_id: user.id,
+                summary: plan.summary,
+                diet_plan: plan.diet,
+                exercise_plan: plan.exercise,
+                precautions: plan.precautions,
+                created_at: new Date().toISOString() // Update timestamp
+            };
+
+            const { error } = await supabase
+                .from('ai_health_plans')
+                .upsert(payload, { onConflict: 'user_id' });
+
+            if (error) throw error;
+
+            setIsSaved(true);
+            setLastSaved(new Date().toISOString());
+            alert("Health Plan saved successfully!");
+
+        } catch (err) {
+            console.error("Error saving plan:", err);
+            alert("Failed to save plan.");
+        } finally {
+            setSaveLoading(false);
         }
     };
 
@@ -83,23 +146,75 @@ export default function HealthPlanView() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', width: '100%' }}>
                     <div>
                         <h2>{t('health_plan.title')}</h2>
                         <p>{t('health_plan.subtitle')}</p>
+                        {lastSaved && isSaved && (
+                            <div className={styles.savedText}>
+                                <CheckCircle size={16} weight="fill" color={isSaved ? "#22C55E" : "var(--primary)"} />
+                                <span>Saved on: {format(new Date(lastSaved), 'dd MMM yyyy, hh:mm a')}</span>
+                            </div>
+                        )}
                     </div>
-                    <Sparkle size={48} weight="fill" style={{ opacity: 0.2 }} />
                 </div>
 
                 {!plan && (
                     <button className={styles.refreshButton} onClick={generatePlan} disabled={loading}>
-                        {loading ? t('health_plan.analyzing') : t('health_plan.generate_btn')}
+                        {loading ? (
+                            <>
+                                <Sparkle size={20} className={styles.spin} />
+                                {t('health_plan.analyzing')}
+                            </>
+                        ) : (
+                            <>
+                                <Sparkle size={20} />
+                                {t('health_plan.generate_btn')}
+                            </>
+                        )}
                     </button>
                 )}
             </div>
 
             {plan && (
                 <>
+                    {/* Action Bar */}
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                        <button
+                            className={styles.refreshButton}
+                            onClick={generatePlan}
+                            disabled={loading}
+                            style={{
+                                background: 'transparent',
+                                border: '1px solid var(--primary)',
+                                color: 'var(--primary)',
+                                padding: '0.6rem 1.5rem',
+                                marginTop: 0
+                            }}
+                        >
+                            {loading ? <ArrowsClockwise size={20} className={styles.spin} /> : <ArrowsClockwise size={20} />}
+                            {t('health_plan.regenerate_btn')}
+                        </button>
+
+                        <button
+                            className={styles.refreshButton}
+                            onClick={savePlan}
+                            disabled={saveLoading || isSaved}
+                            style={{
+                                opacity: isSaved ? 0.9 : 1,
+                                cursor: isSaved ? 'default' : 'pointer',
+                                background: isSaved ? 'var(--surface)' : 'var(--primary)',
+                                color: isSaved ? 'var(--text-primary)' : 'white',
+                                border: isSaved ? '1px solid var(--border)' : 'none',
+                                padding: '0.6rem 1.5rem',
+                                marginTop: 0
+                            }}
+                        >
+                            {isSaved ? <CheckCircle size={20} weight="fill" color="#22C55E" /> : <FloppyDisk size={20} />}
+                            {isSaved ? 'Saved' : 'Save Plan'}
+                        </button>
+                    </div>
+
                     <div className={styles.grid}>
                         <div className={`${styles.section} ${styles.summaryCard}`}>
                             <div className={styles.sectionTitle}><Sparkle size={24} /> {t('health_plan.summary')}</div>
@@ -121,9 +236,6 @@ export default function HealthPlanView() {
                             <div className={styles.content}>{renderContent(plan.precautions)}</div>
                         </div>
                     </div>
-                    <button style={{ marginTop: '1rem', background: 'transparent', border: '1px solid var(--primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', color: 'var(--primary)' }} onClick={generatePlan}>
-                        {t('health_plan.regenerate_btn')}
-                    </button>
                 </>
             )}
         </div>
