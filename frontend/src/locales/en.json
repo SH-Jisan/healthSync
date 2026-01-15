@@ -391,7 +391,8 @@
       "confirm_btn": "Confirm Booking",
       "booking": "Booking...",
       "success": "Appointment request sent to Dr. {{name}}!",
-      "login_error": "Please login first"
+      "login_error": "Please login first",
+      "error_generic": "Failed to book appointment. Please try again."
     },
     "doctor_list": {
       "title": "Find a Specialist",

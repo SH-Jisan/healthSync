@@ -40,9 +40,12 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
             alert(t('book_appointment.success', { name: doctor.full_name }));
             onClose();
 
-        } catch (err: unknown) {
-            if (err instanceof Error) {
+        } catch (err: any) {
+            console.error('Booking Error:', err);
+            if (err.message) {
                 alert(err.message);
+            } else {
+                alert(t('book_appointment.error_generic', 'Failed to book appointment. Please try again.'));
             }
         } finally {
             setLoading(false);
