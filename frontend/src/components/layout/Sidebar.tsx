@@ -59,6 +59,9 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
             { key: 'appointments', icon: <CalendarCheck size={24} />, path: '/appointments' },
             // Removed History link as requested
         ] : []),
+        ...((user?.user_metadata?.role === 'DOCTOR') ? [
+            { key: 'citizen_view', icon: <User size={24} />, path: '/doctor/citizen-view' },
+        ] : []),
         ...((user?.user_metadata?.role === 'CITIZEN' || user?.user_metadata?.role === 'DOCTOR') ? [{
             key: 'prescriptions',
             icon: <Prescription size={24} />,

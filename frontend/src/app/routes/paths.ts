@@ -23,5 +23,6 @@ export const PATHS = {
 
     // Doctor
     DOCTORS: '/doctors',
+    DOCTOR_CITIZEN_VIEW: '/doctor/citizen-view',
     PRESCRIPTIONS: '/prescriptions',
 };

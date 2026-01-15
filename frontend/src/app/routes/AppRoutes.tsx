@@ -18,6 +18,7 @@ const AboutPage = lazy(() => import('@/pages/about/AboutPage'));
 
 // Feature Pages
 const DashboardPage = lazy(() => import('@/pages/dashboard/DashboardPage'));
+const CitizenHome = lazy(() => import('@/pages/dashboard/CitizenHome'));
 const ProfilePage = lazy(() => import('@/pages/profile/ProfilePage'));
 const EditProfile = lazy(() => import('@/pages/profile/EditProfile'));
 const PatientAppointments = lazy(() => import('@/pages/appointments/PatientAppointments'));
@@ -81,6 +82,7 @@ const AppRoutes = ({ session }: AppRoutesProps) => {
 
                         {/* Doctor */}
                         <Route path={PATHS.DOCTORS} element={<DoctorList />} />
+                        <Route path={PATHS.DOCTOR_CITIZEN_VIEW} element={<CitizenHome />} />
                     </Route>
                 </Route>
 
