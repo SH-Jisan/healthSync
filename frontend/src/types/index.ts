@@ -103,7 +103,7 @@ export interface Appointment {
     doctor_id: string;
     patient_id: string;
     appointment_date: string;
-    status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'Accepted';
     reason?: string;
 }
 export interface AvailableTest {

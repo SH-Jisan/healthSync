@@ -85,7 +85,9 @@ export default function PatientAppointments() {
 
     const getStatusInfo = (status: string) => {
         switch (status) {
-            case 'CONFIRMED': return { className: styles.statusConfirmed, icon: <CheckCircle weight="fill" /> };
+            case 'CONFIRMED':
+            case 'Accepted':
+                return { className: styles.statusConfirmed, icon: <CheckCircle weight="fill" /> };
             case 'CANCELLED': return { className: styles.statusCancelled, icon: <XCircle weight="fill" /> };
             default: return { className: styles.statusPending, icon: <Hourglass weight="fill" /> };
         }

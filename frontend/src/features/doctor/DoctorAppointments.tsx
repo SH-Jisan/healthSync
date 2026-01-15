@@ -42,13 +42,14 @@ export default function DoctorAppointments() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const updateStatus = async (id: string, status: 'CONFIRMED' | 'CANCELLED') => {
+    const updateStatus = async (id: string, status: 'Accepted' | 'CANCELLED') => {
         const { error } = await supabase
             .from('appointments')
             .update({ status })
             .eq('id', id);
 
         if (error) {
+            console.error(error);
             alert(t('common.error'));
         } else {
             setAppointments(prev => prev.map(app =>
@@ -102,7 +103,7 @@ export default function DoctorAppointments() {
                                 {app.status === 'PENDING' && (
                                     <>
                                         <button
-                                            onClick={() => updateStatus(app.id, 'CONFIRMED')}
+                                            onClick={() => updateStatus(app.id, 'Accepted')}
                                             className={styles.acceptBtn}
                                         >
                                             <CheckCircle size={18} /> {t('dashboard.doctor.appointments.accept')}
@@ -116,7 +117,7 @@ export default function DoctorAppointments() {
                                     </>
                                 )}
 
-                                {app.status === 'CONFIRMED' && (
+                                {(app.status === 'CONFIRMED' || app.status === 'Accepted') && (
                                     <span className={styles.statusConfirmed}>
                                         <CheckCircle size={20} weight="fill" /> {t('dashboard.doctor.appointments.confirmed')}
                                     </span>
