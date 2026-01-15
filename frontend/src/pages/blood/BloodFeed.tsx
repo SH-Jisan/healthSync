@@ -131,6 +131,26 @@ export default function BloodFeed() {
                                         <div className={styles.requestDetails}>
                                             <h3 className={styles.hospitalName}>{req.hospital_name}</h3>
                                             {req.reason && <p className={styles.reasonBox}>"{req.reason}"</p>}
+
+                                            <div className={styles.progressContainer} style={{ marginTop: '1rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
+                                                    <span style={{ color: 'var(--text-secondary)' }}>
+                                                        {t('blood.feed.donors_found', 'Donors Found')} ({req.accepted_count || 0}/3)
+                                                    </span>
+                                                    <span style={{ color: 'var(--primary)' }}>
+                                                        {Math.min(100, Math.round(((req.accepted_count || 0) / 3) * 100))}%
+                                                    </span>
+                                                </div>
+                                                <div style={{ width: '100%', height: '6px', background: 'var(--surface-border)', borderRadius: '4px', overflow: 'hidden' }}>
+                                                    <div style={{
+                                                        width: `${Math.min(100, ((req.accepted_count || 0) / 3) * 100)}%`,
+                                                        height: '100%',
+                                                        background: 'var(--primary)',
+                                                        borderRadius: '4px',
+                                                        transition: 'width 0.5s ease'
+                                                    }}></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 

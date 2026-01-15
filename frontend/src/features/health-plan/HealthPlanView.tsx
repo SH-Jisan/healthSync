@@ -21,11 +21,18 @@ export default function HealthPlanView() {
     const generatePlan = async () => {
         setLoading(true);
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                alert("Please login to generate health plan");
+                return;
+            }
+
             // আমরা লেটেস্ট মেডিকেল ইভেন্টগুলো পাঠাবো
             const { data: events } = await supabase
                 .from('medical_events')
-                .select('*')
-                .limit(5)
+                .select('title, event_type, severity, summary')
+                .eq('patient_id', user.id)
+                .limit(10)
                 .order('event_date', { ascending: false });
 
             // Pass the current language to the edge function

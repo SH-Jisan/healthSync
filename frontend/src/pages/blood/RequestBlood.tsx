@@ -16,7 +16,7 @@ export default function RequestBlood() {
     // Form State
     const [bloodGroup, setBloodGroup] = useState('A+');
     const [hospital, setHospital] = useState('');
-    const [contact, setContact] = useState('');
+    const [reason, setReason] = useState('');
     const [urgency, setUrgency] = useState<'NORMAL' | 'CRITICAL'>('NORMAL');
 
     const handleAIAnalyze = async () => {
@@ -32,7 +32,7 @@ export default function RequestBlood() {
                 if (data.blood_group) setBloodGroup(data.blood_group);
                 if (data.location) setHospital(data.location);
                 if (data.urgency) setUrgency(data.urgency);
-                if (data.contact) setContact(data.contact);
+                if (data.patient_note) setReason(data.patient_note);
             }
         } catch (error) {
             console.error(error);
@@ -54,9 +54,24 @@ export default function RequestBlood() {
                 requester_id: user.id,
                 blood_group: bloodGroup,
                 hospital_name: hospital,
-                contact_number: contact,
+                reason: reason,
                 urgency: urgency,
-                status: 'OPEN'
+                status: 'OPEN',
+                accepted_count: 0
+            });
+
+            if (error) throw error;
+
+            // Trigger notification edge function (fire and forget)
+            supabase.functions.invoke('notify-donors', {
+                body: {
+                    blood_group: bloodGroup,
+                    hospital: hospital,
+                    urgency: urgency
+                }
+            }).then(({ data, error }) => {
+                if (error) console.error("Notification Error:", error);
+                else console.log("Notification Response:", data);
             });
 
             if (error) throw error;
@@ -187,16 +202,17 @@ export default function RequestBlood() {
 
                         <motion.div variants={itemVariants} className={styles.inputGroup}>
                             <label className={styles.label}>
-                                <Phone size={18} weight="duotone" style={{ color: 'var(--primary)' }} />
-                                {t('blood.request.contact_label', 'Contact Number')}
+                                <Heartbeat size={18} weight="duotone" style={{ color: 'var(--primary)' }} />
+                                {t('blood.request.reason_label', 'Patient Condition / Note')}
                             </label>
-                            <input
-                                type="tel"
+                            <textarea
                                 required
-                                value={contact}
-                                onChange={(e) => setContact(e.target.value)}
+                                value={reason}
+                                onChange={(e) => setReason(e.target.value)}
                                 className={styles.input}
-                                placeholder="017..."
+                                placeholder="Describe the situation..."
+                                rows={3}
+                                style={{ resize: 'vertical' }}
                             />
                         </motion.div>
 

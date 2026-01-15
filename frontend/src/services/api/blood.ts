@@ -9,6 +9,7 @@ export interface BloodRequest {
     created_at: string;
     reason: string;
     requester_id: string;
+    accepted_count?: number;
 }
 
 export const bloodApi = {
