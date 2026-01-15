@@ -76,9 +76,23 @@ const EventDetailsModal = React.forwardRef<HTMLDivElement, EventDetailsProps>(fu
 
     const safetyStatus = aiData?.medicine_safety_check || 'N/A';
 
+    // Helper to normalize path/url
+    const getStoragePath = (urlOrPath: string) => {
+        if (!urlOrPath) return '';
+        if (urlOrPath.startsWith('http')) {
+            // Try to extract path from Supabase URL
+            const matches = urlOrPath.split('/reports/');
+            if (matches.length > 1) return matches[1];
+            // Fallback for other URL structures if needed, or return as is if implementation changes
+            return urlOrPath;
+        }
+        return urlOrPath;
+    };
+
     const getImageUrl = (path: string) => {
         if (!path) return null;
-        const { data } = supabase.storage.from('medical-reports').getPublicUrl(path);
+        if (path.startsWith('http')) return path; // Already a URL
+        const { data } = supabase.storage.from('reports').getPublicUrl(path);
         return data.publicUrl;
     };
 
@@ -100,16 +114,38 @@ const EventDetailsModal = React.forwardRef<HTMLDivElement, EventDetailsProps>(fu
 
     const handleDownload = async () => {
         if (event.attachment_urls && event.attachment_urls.length > 0) {
-            const path = event.attachment_urls[0];
-            const { data } = supabase.storage.from('medical-reports').getPublicUrl(path);
-            const url = data.publicUrl;
-            if (url) {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `HealthSync_Report_${event.id}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+            try {
+                const urlOrPath = event.attachment_urls[0];
+                const path = getStoragePath(urlOrPath);
+
+                console.log('Downloading file from path:', path);
+
+                const { data, error } = await supabase.storage
+                    .from('reports')
+                    .download(path);
+
+                if (error) throw error;
+
+                if (data) {
+                    // Create a blob URL and force download
+                    const url = window.URL.createObjectURL(data);
+                    const a = document.createElement('a');
+                    a.href = url;
+
+                    // Determine file extension
+                    const ext = path.split('.').pop() || 'jpg';
+                    a.download = `HealthSync_Report_${format(new Date(), 'yyyyMMdd_HHmm')}.${ext}`;
+
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Cleanup
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
+            } catch (err) {
+                console.error('Download failed:', err);
+                alert('Failed to download file. Please try again.');
             }
         }
     };
@@ -364,11 +400,32 @@ const EventDetailsModal = React.forwardRef<HTMLDivElement, EventDetailsProps>(fu
                         {activeTab === 'file' && (
                             <div className={styles.fileContainer}>
                                 {event.attachment_urls && event.attachment_urls.length > 0 ? (
-                                    <img
-                                        src={getImageUrl(event.attachment_urls[0])!}
-                                        alt="Document"
-                                        className={styles.attachmentImg}
-                                    />
+                                    (() => {
+                                        const url = getImageUrl(event.attachment_urls[0]);
+                                        if (!url) return null;
+
+                                        const isPdf = url.toLowerCase().includes('.pdf') ||
+                                            event.attachment_urls[0].toLowerCase().endsWith('.pdf');
+
+                                        if (isPdf) {
+                                            return (
+                                                <iframe
+                                                    src={`${url}#toolbar=0`}
+                                                    title="PDF Document"
+                                                    className={styles.attachmentImg} // Reusing class for size/fit
+                                                    style={{ height: '500px', border: 'none', width: '100%' }}
+                                                />
+                                            );
+                                        }
+
+                                        return (
+                                            <img
+                                                src={url}
+                                                alt="Document"
+                                                className={styles.attachmentImg}
+                                            />
+                                        );
+                                    })()
                                 ) : (
                                     <div style={{ textAlign: 'center', color: '#94A3B8' }}>
                                         <ImageIcon size={64} />
